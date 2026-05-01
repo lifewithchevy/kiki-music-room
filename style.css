@@ -1056,7 +1056,7 @@ body.immersive .cabinet-wrap {
 /* ═══ CIRCULAR CONTROL DIALS ═══ */
 .ctrl-dial {
     position: absolute;
-    right: 6px;
+    right: -24px;
     width: 78px;
     z-index: 4;
     cursor: pointer;
