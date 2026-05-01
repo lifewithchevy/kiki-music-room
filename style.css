@@ -1053,12 +1053,145 @@ body.immersive .cabinet-wrap {
     box-shadow: 0 0 6px rgba(110,226,122,0.7), 0 0 12px rgba(110,226,122,0.3);
 }
 
+/* ═══ CIRCULAR CONTROL DIALS ═══ */
+.ctrl-dial {
+    position: absolute;
+    right: 6px;
+    width: 78px;
+    z-index: 4;
+    cursor: pointer;
+    user-select: none;
+}
+.ctrl-dial-size  { top: 218px; }
+.ctrl-dial-speed { top: 288px; }
+
+.ctrl-dial-hd {
+    font-size: 7px;
+    letter-spacing: 2.5px;
+    color: #3e3e3e;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: right;
+    margin-bottom: 5px;
+    padding-right: 1px;
+}
+.ctrl-dial-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+}
+.ctrl-dial-marks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 13px;
+}
+.cdm {
+    font-size: 9px;
+    color: #2e2e2e;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+    position: relative;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.cdm::after {
+    content: '';
+    position: absolute;
+    left: calc(100% + 2px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px; height: 1px;
+    background: #282828;
+}
+.cdm.active { color: #666; }
+
+.ctrl-dial-body {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    background: radial-gradient(circle at 38% 32%, #252525 0%, #111 55%, #060606 100%);
+    box-shadow:
+        0 3px 10px rgba(0,0,0,0.8),
+        0 0 0 1.5px rgba(0,0,0,0.9),
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        inset 0 -1px 0 rgba(0,0,0,0.5);
+}
+.ctrl-dial-body::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.03);
+}
+.ctrl-dial-ptr {
+    position: absolute;
+    width: 2px; height: 40%;
+    background: linear-gradient(180deg, rgba(160,160,160,0.95) 0%, rgba(90,90,90,0.6) 100%);
+    border-radius: 1px;
+    left: calc(50% - 1px);
+    top: 30%;
+    transform-origin: center center;
+    transform: rotate(var(--pa, -45deg));
+    transition: transform 0.45s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+/* ═══ BLUETOOTH BUTTON ═══ */
+.bt-btn {
+    position: absolute;
+    bottom: 20px; left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 5;
+    padding: 0;
+}
+.bt-circle {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, #1c1c1c, #070707);
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 3px 10px rgba(0,0,0,0.75);
+    transition: all 0.3s;
+}
+.bt-btn:hover .bt-circle { color: #555; }
+.bt-btn.active .bt-circle {
+    color: #4a8fe8;
+    border-color: rgba(74,143,232,0.25);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 3px 10px rgba(0,0,0,0.75),
+        0 0 12px rgba(74,143,232,0.25);
+}
+.bt-label {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: #2e2e2e;
+    text-transform: uppercase;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 0.3s;
+}
+.bt-btn.active .bt-label { color: #4a8fe8; }
+
 /* ═══ CABINET CONTROLS ═══ */
 .cabinet-controls {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap: 24px;
     padding: 12px 8px 4px;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }

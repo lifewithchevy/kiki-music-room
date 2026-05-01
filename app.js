@@ -483,15 +483,30 @@ nextBtn.addEventListener('click', () => {
     }
 });
 
-document.querySelectorAll('.speed-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.speed-pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        speed = parseInt(btn.dataset.speed);
-        if (platterAnim && platterAnim.playbackRate > 0) {
-            rampPlatter(speed === 45 ? 1.35 : 1.0, 600);
-        }
-    });
+// Speed dial (circular)
+document.getElementById('speedDial')?.addEventListener('click', () => {
+    const dial = document.getElementById('speedDial');
+    const next = dial.dataset.speed === '33' ? '45' : '33';
+    dial.dataset.speed = next;
+    speed = parseInt(next);
+    dial.querySelector('.ctrl-dial-ptr').style.setProperty('--pa', next === '33' ? '-45deg' : '-135deg');
+    dial.querySelectorAll('.cdm').forEach(m => m.classList.toggle('active', m.dataset.val === next));
+    if (platterAnim && platterAnim.playbackRate > 0)
+        rampPlatter(speed === 45 ? 1.35 : 1.0, 600);
+});
+
+// Size dial
+document.getElementById('sizeDial')?.addEventListener('click', () => {
+    const dial = document.getElementById('sizeDial');
+    const next = dial.dataset.size === '12' ? '7' : '12';
+    dial.dataset.size = next;
+    dial.querySelector('.ctrl-dial-ptr').style.setProperty('--pa', next === '7' ? '-45deg' : '-135deg');
+    dial.querySelectorAll('.cdm').forEach(m => m.classList.toggle('active', m.dataset.val === next));
+});
+
+// Bluetooth button
+document.getElementById('btBtn')?.addEventListener('click', () => {
+    document.getElementById('btBtn').classList.toggle('active');
 });
 
 /* ═══ Auto-advance when track ends ═══ */
