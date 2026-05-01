@@ -627,13 +627,14 @@ body.immersive .cabinet-wrap {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     margin-bottom: 18px;
     height: 390px;
 }
 
 .platter-shadow {
     position: absolute;
+    left: 26px; top: 11px;
     width: 368px; height: 368px;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(0,0,0,0.75) 0%, transparent 65%);
@@ -675,6 +676,7 @@ body.immersive .cabinet-wrap {
         inset 0 2px 0 rgba(255,255,255,0.22),
         inset 0 -3px 6px rgba(0,0,0,0.5);
     flex-shrink: 0;
+    margin-left: 30px;
 }
 
 /* Felt mat */
