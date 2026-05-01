@@ -66,7 +66,7 @@ input  { font-family: inherit; }
 }
 
 .sidebar       { grid-area: sidebar; }
-.main          { grid-area: main; overflow-y: auto; position: relative; z-index: 1; }
+.main          { grid-area: main; overflow: hidden; position: relative; z-index: 1; display: flex; flex-direction: column; }
 .transport-bar { grid-area: transport; z-index: 50; }
 
 /* ═══════════════════════════════════════════════════════════
@@ -330,74 +330,103 @@ input  { font-family: inherit; }
 
 .add-manual-btn:hover { color: var(--silver-soft); }
 
-/* Recent section */
-.recent-section {
+/* Track list section */
+.track-list-section {
     flex: 1;
-    padding: 0 18px;
-    overflow-y: auto;
-    min-height: 0;
-}
-
-.recent-section::-webkit-scrollbar { width: 3px; }
-.recent-section::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
-
-.recent-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    min-height: 0;
+    padding: 0 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    margin-top: 4px;
+    padding-top: 14px;
 }
 
-.recent-item {
+.track-list-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 6px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 4px;
+}
+
+.track-count {
+    font-size: 9px;
+    color: var(--silver-dim);
+    font-family: 'DM Mono', monospace;
+}
+
+.track-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.track-list::-webkit-scrollbar { width: 3px; }
+.track-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+.track-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.15s;
-}
-
-.recent-item:hover { background: rgba(255, 255, 255, 0.04); }
-
-.recent-art {
-    width: 36px; height: 36px;
-    border-radius: 4px;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    position: relative;
-    overflow: hidden;
 }
 
-.recent-art::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.15) 0%, transparent 60%);
+.track-item:hover { background: rgba(255,255,255,0.05); }
+
+.track-item.active {
+    background: rgba(255,255,255,0.07);
 }
 
-.recent-info { overflow: hidden; flex: 1; }
-
-.recent-title {
-    font-size: 12px;
-    color: var(--silver);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.recent-artist {
-    font-size: 10px;
+.track-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
     color: var(--silver-dim);
+    min-width: 18px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.track-item.active .track-num { color: var(--accent-bright); }
+
+.track-name {
+    flex: 1;
+    font-size: 11px;
+    color: var(--text-mid);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 1.3;
 }
 
-.recent-empty {
+.track-item.active .track-name { color: var(--text-bright); }
+
+.track-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent-bright);
+    flex-shrink: 0;
+    animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+
+.track-empty {
     font-size: 11px;
     color: var(--silver-dim);
     font-style: italic;
-    padding: 8px 4px;
+    padding: 12px 4px;
+    line-height: 1.5;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -420,8 +449,9 @@ input  { font-family: inherit; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 22px 40px 10px;
+    padding: 14px 32px 8px;
     gap: 24px;
+    flex-shrink: 0;
 }
 
 .top-greeting { display: flex; flex-direction: column; gap: 2px; }
@@ -477,41 +507,42 @@ input  { font-family: inherit; }
    ═══════════════════════════════════════════════════════════ */
 .hero-stage {
     position: relative;
-    margin: 10px 40px 28px;
-    border-radius: 16px;
+    margin: 8px 24px 0;
+    border-radius: 14px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 44px 40px 56px;
-    /* Warm walnut wood grain */
+    flex: 1;
+    min-height: 0;
+    /* Dark Sony-style walnut — cooler, richer, less orange */
     background:
-        linear-gradient(180deg, rgba(0,0,0,0.38) 0%, transparent 30%, rgba(0,0,0,0.18) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.08) 28%, rgba(0,0,0,0.28) 100%),
         repeating-linear-gradient(
             178deg,
-            transparent 0px, transparent 5px,
-            rgba(0,0,0,0.055) 5px, rgba(0,0,0,0.055) 6px,
-            transparent 6px, transparent 13px,
-            rgba(255,255,255,0.018) 13px, rgba(255,255,255,0.018) 14px
+            transparent 0px, transparent 4px,
+            rgba(0,0,0,0.08) 4px, rgba(0,0,0,0.08) 5px,
+            transparent 5px, transparent 10px,
+            rgba(255,255,255,0.014) 10px, rgba(255,255,255,0.014) 11px
         ),
         repeating-linear-gradient(
-            181deg,
-            transparent 0px, transparent 22px,
-            rgba(0,0,0,0.04) 22px, rgba(0,0,0,0.04) 26px,
-            transparent 26px, transparent 50px
+            182deg,
+            transparent 0px, transparent 18px,
+            rgba(0,0,0,0.06) 18px, rgba(0,0,0,0.06) 22px,
+            transparent 22px, transparent 46px
         ),
-        linear-gradient(172deg,
-            #9a6640 0%,
-            #7c4e28 18%,
-            #6b4022 36%,
-            #7a5030 55%,
-            #8c5e38 74%,
-            #754c28 88%,
-            #7c4e28 100%);
+        linear-gradient(170deg,
+            #4e321a 0%,
+            #3c2610 18%,
+            #2e1c09 36%,
+            #3e2812 52%,
+            #4a3018 68%,
+            #382212 84%,
+            #3c2610 100%);
     box-shadow:
-        0 32px 80px rgba(0,0,0,0.7),
-        inset 0 1px 0 rgba(255,255,255,0.08),
-        inset 0 -1px 0 rgba(0,0,0,0.4);
+        0 24px 60px rgba(0,0,0,0.75),
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        inset 0 -1px 0 rgba(0,0,0,0.5);
 }
 
 .stage-glow {
