@@ -161,8 +161,8 @@
                             <!-- Tonearm rest cradle -->
                             <div class="tonearm-rest"></div>
 
-                            <!-- Tonearm assembly -->
-                            <div class="tonearm-assembly">
+                            <!-- Tonearm assembly — entire zone is clickable -->
+                            <div class="tonearm-assembly" id="tonearmAssembly">
                                 <div class="tonearm-base-mount">
                                     <div class="cw-shaft"></div>
                                     <div class="counterweight">
@@ -172,66 +172,74 @@
                                 <div class="tonearm-pivot">
                                     <div class="pivot-base"></div>
                                     <div class="tonearm" id="tonearm">
-                                        <!-- Single connected SVG arm — no more broken div segments -->
-                                        <svg class="arm-svg" viewBox="-28 0 56 228" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+                                        <svg class="arm-svg" viewBox="-30 -2 62 240" xmlns="http://www.w3.org/2000/svg" overflow="visible">
                                             <defs>
-                                                <!-- Shiny black arm — Sony style -->
+                                                <!-- 3D cylindrical arm — lit from right edge -->
                                                 <linearGradient id="armGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                    <stop offset="0%"   stop-color="#2c2c2c"/>
-                                                    <stop offset="18%"  stop-color="#141414"/>
-                                                    <stop offset="55%"  stop-color="#060606"/>
-                                                    <stop offset="100%" stop-color="#1a1a1a"/>
+                                                    <stop offset="0%"   stop-color="#262626"/>
+                                                    <stop offset="20%"  stop-color="#181818"/>
+                                                    <stop offset="50%"  stop-color="#070707"/>
+                                                    <stop offset="80%"  stop-color="#141414"/>
+                                                    <stop offset="100%" stop-color="#202020"/>
                                                 </linearGradient>
-                                                <linearGradient id="hsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                    <stop offset="0%"   stop-color="#282828"/>
-                                                    <stop offset="50%"  stop-color="#101010"/>
-                                                    <stop offset="100%" stop-color="#080808"/>
+                                                <!-- Headshell top-lit gradient -->
+                                                <linearGradient id="hsBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%"   stop-color="#1e1e1e"/>
+                                                    <stop offset="45%"  stop-color="#0e0e0e"/>
+                                                    <stop offset="100%" stop-color="#050505"/>
                                                 </linearGradient>
                                             </defs>
 
-                                            <!-- Drop shadow for depth -->
-                                            <path d="M 1,2 C 6,42 9,88 6,133 C 3,160 -9,174 -12,194"
-                                                  fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="9" stroke-linecap="round"/>
+                                            <!-- Ground shadow -->
+                                            <path d="M 2,4 C 7,44 10,90 7,135 C 4,162 -8,177 -10,197"
+                                                  fill="none" stroke="rgba(0,0,0,0.48)" stroke-width="13" stroke-linecap="round"/>
 
-                                            <!-- Main arm tube — single S-curve path -->
-                                            <path d="M 0,0 C 5,40 8,86 5,131 C 2,158 -10,172 -13,192"
-                                                  fill="none" stroke="url(#armGrad)" stroke-width="5.5" stroke-linecap="round"/>
+                                            <!-- Main arm tube — S-curve, thicker for realism -->
+                                            <path d="M 0,0 C 5,40 8,86 5,131 C 2,158 -9,173 -11,192"
+                                                  fill="none" stroke="url(#armGrad)" stroke-width="7" stroke-linecap="round"/>
 
-                                            <!-- Subtle shiny specular highlight -->
-                                            <path d="M 1.5,0 C 6.5,40 9.5,86 6.5,131 C 3.5,158 -8.5,172 -11.5,192"
-                                                  fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.4" stroke-linecap="round"/>
+                                            <!-- Right-edge specular (3D roundness) -->
+                                            <path d="M 2.5,0 C 7.5,40 10.5,86 7.5,131 C 4.5,158 -6.5,173 -8.5,192"
+                                                  fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="2" stroke-linecap="round"/>
 
-                                            <!-- Headshell body -->
-                                            <rect x="-27" y="186" width="26" height="19" rx="3" fill="url(#hsGrad)"/>
-                                            <!-- Headshell bevel highlight -->
-                                            <rect x="-27" y="186" width="26" height="5" rx="2.5" fill="rgba(255,255,255,0.14)"/>
-                                            <!-- Headshell bottom shadow -->
-                                            <rect x="-27" y="200" width="26" height="5" rx="2" fill="rgba(0,0,0,0.3)"/>
+                                            <!-- Arm-to-headshell neck — angled connector ("wrist") -->
+                                            <path d="M -11,193 L -11,198 L -27,198"
+                                                  fill="none" stroke="#161616" stroke-width="6" stroke-linecap="square" stroke-linejoin="miter"/>
+                                            <path d="M -11,193 L -11,196.5 L -27,196.5"
+                                                  fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.2" stroke-linecap="square" stroke-linejoin="miter"/>
 
-                                            <!-- Finger lift tab -->
-                                            <rect x="-2" y="187" width="4" height="13" rx="2" fill="rgba(160,160,160,0.35)"/>
+                                            <!-- Sony-style angular headshell body -->
+                                            <rect x="-29" y="194" width="22" height="15" rx="1.5" fill="url(#hsBodyGrad)"/>
+                                            <!-- Top face lit highlight -->
+                                            <rect x="-29" y="194" width="22" height="3" rx="1" fill="rgba(255,255,255,0.08)"/>
+                                            <!-- Left-edge rim -->
+                                            <rect x="-29" y="194" width="1.5" height="15" fill="rgba(255,255,255,0.05)"/>
+                                            <!-- Bottom undercut shadow -->
+                                            <rect x="-29" y="206" width="22" height="3" rx="1" fill="rgba(0,0,0,0.45)"/>
 
-                                            <!-- Cartridge body (pickup) -->
-                                            <rect x="-22" y="204" width="17" height="13" rx="2" fill="#080808" opacity="0.96"/>
-                                            <rect x="-22" y="204" width="17" height="3.5" rx="1.5" fill="rgba(255,255,255,0.07)"/>
+                                            <!-- Mounting screws (cartridge anchor bolts) -->
+                                            <circle cx="-24.5" cy="199" r="1.4" fill="#060606" stroke="rgba(255,255,255,0.16)" stroke-width="0.6"/>
+                                            <circle cx="-13.5" cy="199" r="1.4" fill="#060606" stroke="rgba(255,255,255,0.16)" stroke-width="0.6"/>
+
+                                            <!-- Cartridge body — angular block -->
+                                            <rect x="-27" y="209" width="16" height="10" rx="1.5" fill="#0b0b0b"/>
+                                            <rect x="-27" y="209" width="16" height="2.5" rx="1"   fill="rgba(255,255,255,0.04)"/>
+                                            <rect x="-27" y="215" width="1"   height="4"            fill="rgba(255,255,255,0.05)"/>
 
                                             <!-- Cantilever wire -->
-                                            <line x1="-13" y1="216" x2="-13" y2="222"
-                                                  stroke="#888" stroke-width="1.3" stroke-linecap="round"/>
+                                            <line x1="-19" y1="219" x2="-19" y2="226"
+                                                  stroke="#888" stroke-width="1.2" stroke-linecap="round"/>
 
                                             <!-- Stylus diamond tip -->
-                                            <circle cx="-13" cy="224" r="2.4" fill="rgba(255,255,255,0.92)"/>
-                                            <circle cx="-13" cy="224" r="1" fill="#cccccc"/>
+                                            <ellipse cx="-19" cy="228" rx="2.2" ry="2.5" fill="rgba(255,255,255,0.88)"/>
+                                            <circle  cx="-19" cy="227" r="1"                fill="#d0d0d0"/>
+
+                                            <!-- Wide invisible hit zone over entire arm -->
+                                            <rect x="-30" y="-2" width="62" height="240" fill="transparent" style="cursor:pointer"/>
                                         </svg>
                                     </div>
                                     <div class="pivot-cap"></div>
                                 </div>
-                            </div>
-
-                            <!-- Cue lever -->
-                            <div class="cue-lever" id="cueLever">
-                                <div class="cue-handle"></div>
-                                <span class="cue-label">CUE</span>
                             </div>
                         </div>
 

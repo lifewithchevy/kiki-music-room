@@ -896,7 +896,8 @@ body.immersive .exit-immersive-btn { display: flex; }
     top: -10px; right: 5px;
     width: 130px; height: 340px;
     z-index: 6;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 /* Counterweight + shaft */
@@ -1016,41 +1017,6 @@ body.immersive .exit-immersive-btn { display: flex; }
     pointer-events: none;
 }
 
-/* ═══ CUE LEVER ═══ */
-.cue-lever {
-    position: absolute;
-    bottom: 16px; right: 24px;
-    width: 22px; height: 30px;
-    z-index: 7;
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-.cue-handle {
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 8px; height: 22px;
-    background: linear-gradient(180deg, #282828 0%, #141414 60%, #080808 100%);
-    border-radius: 4px 4px 2px 2px;
-    box-shadow: inset 1px 0 0 rgba(255,255,255,0.12), 0 2px 4px rgba(0,0,0,0.7);
-    transform-origin: bottom center;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cue-lever.engaged .cue-handle {
-    transform: translateX(-50%) rotate(20deg);
-}
-
-.cue-label {
-    position: absolute;
-    bottom: 0; left: 50%;
-    transform: translateX(-50%);
-    color: var(--silver-dim);
-    font-size: 7px;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
 
 /* ═══ MOTOR STATUS LED ═══ */
 .motor-status {
@@ -1550,20 +1516,22 @@ body.immersive .exit-immersive-btn { display: flex; }
 .tb-btn-play {
     width: 38px; height: 38px;
     border-radius: 50%;
-    background: linear-gradient(180deg, var(--accent-bright) 0%, var(--accent) 100%);
-    color: #fff;
+    background: radial-gradient(circle at 40% 35%, #1e1e1e, #080808);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #888;
     box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.3),
-        0 4px 16px rgba(255, 255, 255, 0.12);
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        0 2px 10px rgba(0,0,0,0.6);
     transition: all 0.2s;
 }
 
 .tb-btn-play:hover {
-    color: #fff;
+    color: #bbb;
     transform: scale(1.06);
+    border-color: rgba(255,255,255,0.15);
     box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.4),
-        0 6px 22px rgba(255, 255, 255, 0.20);
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 4px 16px rgba(0,0,0,0.7);
 }
 
 .tb-btn-play svg { width: 14px; height: 14px; }

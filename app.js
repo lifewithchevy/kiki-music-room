@@ -347,9 +347,9 @@ function togglePower(force) {
     if (!isPowered && isPlaying) stopPlayback();
 }
 
-const platterEl   = document.querySelector('.platter');
-const cueLever    = document.getElementById('cueLever');
-const motorStatus = document.getElementById('motorStatus');
+const platterEl       = document.querySelector('.platter');
+const tonearmAssembly = document.getElementById('tonearmAssembly');
+const motorStatus     = document.getElementById('motorStatus');
 
 /* ═══ Begin playback (choreographed) ═══ */
 async function beginPlayback() {
@@ -362,7 +362,6 @@ async function beginPlayback() {
     ensureAudioGraph();
 
     motorStatus.classList.add('running');
-    cueLever.classList.add('engaged');
     playMotorStart();
 
     const target = speed === 45 ? 1.35 : 1.0;
@@ -418,7 +417,6 @@ async function stopPlayback() {
     await sleep(800);
 
     tonearm.classList.remove('cued-up');
-    cueLever.classList.remove('engaged');
     await sleep(350);
 
     motorStatus.classList.remove('running');
@@ -435,12 +433,7 @@ function updatePlayUI() {
 /* ═══ Controls ═══ */
 powerBtn.addEventListener('click', () => togglePower());
 
-tonearm.addEventListener('click', () => {
-    if (currentTrackIdx < 0 || busy) return;
-    isPlaying ? stopPlayback() : beginPlayback();
-});
-
-cueLever.addEventListener('click', () => {
+tonearmAssembly.addEventListener('click', () => {
     if (currentTrackIdx < 0 || busy) return;
     isPlaying ? stopPlayback() : beginPlayback();
 });
