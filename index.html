@@ -77,14 +77,19 @@
                 <span class="greeting-time" id="greetingTime">Happy Birthday</span>
                 <span class="greeting-sub">Your vinyl is ready. Enjoy brother.</span>
             </div>
-            <div class="top-search">
-                <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
-                    <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/>
-                    <line x1="11" y1="11" x2="14" y2="14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <button class="immersive-btn" id="immersiveBtn" title="Immersive view">
+                <svg viewBox="0 0 20 20" fill="none" width="18" height="18" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                    <path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/>
                 </svg>
-                <input type="text" placeholder="Search your collection" id="searchInput"/>
-            </div>
+            </button>
         </div>
+
+        <!-- Exit immersive floating button -->
+        <button class="exit-immersive-btn" id="exitImmersiveBtn" title="Exit immersive">
+            <svg viewBox="0 0 20 20" fill="none" width="16" height="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M7 3H3v4M3 3l5 5M13 3h4v4M17 3l-5 5M7 17H3v-4M3 17l5-5M13 17h4v-4M17 17l-5-5"/>
+            </svg>
+        </button>
 
         <!-- ━━━ Hero Stage — Turntable as the focus ━━━ -->
         <section class="hero-stage">
@@ -96,8 +101,7 @@
 
                     <div class="cabinet-face">
                         <div class="brand-badge">
-                            <span class="badge-name">Kiki</span>
-                            <span class="badge-model">MK II ⋅ STUDIO</span>
+                            <span class="badge-model">AR-41 MAY012026 ⋅ STUDIO</span>
                         </div>
 
                         <!-- Platter -->
@@ -231,27 +235,13 @@
                             </div>
                         </div>
 
-                        <!-- Cabinet controls — Speed · Level · Power (right) -->
+                        <!-- Cabinet controls — Speed · Power -->
                         <div class="cabinet-controls">
                             <div class="speed-cluster">
                                 <span class="ctrl-label">SPEED</span>
                                 <div class="speed-pills">
                                     <button class="speed-pill active" data-speed="33">33<sup>⅓</sup></button>
                                     <button class="speed-pill" data-speed="45">45</button>
-                                </div>
-                            </div>
-
-                            <div class="vu-meter">
-                                <span class="ctrl-label">LEVEL</span>
-                                <div class="vu-bars">
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
-                                    <div class="vu-bar"></div>
                                 </div>
                             </div>
 

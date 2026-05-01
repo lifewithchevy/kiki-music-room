@@ -459,35 +459,65 @@ input  { font-family: inherit; }
     letter-spacing: 0.3px;
 }
 
-.top-search {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 22px;
-    padding: 9px 18px;
-    width: 270px;
+/* Immersive mode toggle */
+.immersive-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
     color: var(--silver-dim);
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+.immersive-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--silver);
+    border-color: rgba(255,255,255,0.18);
+}
+
+/* Exit immersive floating button */
+.exit-immersive-btn {
+    display: none;
+    position: fixed;
+    top: 18px; right: 18px;
+    z-index: 200;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.45);
+    width: 36px; height: 36px;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     transition: all 0.2s;
 }
+.exit-immersive-btn:hover { color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.75); }
 
-.top-search:focus-within {
-    border-color: rgba(255, 255, 255, 0.22);
-    color: var(--silver);
-    box-shadow: 0 0 18px var(--accent-glow);
+/* ═══ IMMERSIVE MODE ═══ */
+body.immersive .sidebar,
+body.immersive .top-bar,
+body.immersive .transport-bar { display: none !important; }
+
+body.immersive .salon {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "main";
 }
 
-.top-search input {
+body.immersive .main {
+    grid-area: main;
+    height: 100vh;
+}
+
+body.immersive .hero-stage {
+    margin: 0;
+    border-radius: 0;
     flex: 1;
-    background: none;
-    border: none;
-    color: var(--silver);
-    font-size: 12px;
-    outline: none;
+    height: 100vh;
 }
 
-.top-search input::placeholder { color: var(--silver-dim); }
+body.immersive .exit-immersive-btn { display: flex; }
 
 /* ═══════════════════════════════════════════════════════════
    HERO STAGE — Turntable as the center focus
@@ -579,21 +609,12 @@ input  { font-family: inherit; }
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.badge-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 500;
-    font-style: italic;
-    color: #777;
-    line-height: 1;
-    letter-spacing: 0.5px;
-}
-
 .badge-model {
     font-size: 8px;
     letter-spacing: 3px;
-    color: #444;
+    color: #555;
     text-transform: uppercase;
+    font-weight: 500;
 }
 
 /* ═══ PLATTER ═══ */
@@ -1048,7 +1069,7 @@ input  { font-family: inherit; }
 /* ═══ CABINET CONTROLS ═══ */
 .cabinet-controls {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     align-items: center;
     gap: 24px;
     padding: 12px 8px 4px;
@@ -1080,14 +1101,14 @@ input  { font-family: inherit; }
 .power-btn {
     width: 40px; height: 40px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #1e2838, #0a0e14);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    color: var(--silver-faint);
+    background: radial-gradient(circle at 40% 35%, #1c1c1c, #080808);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #3a3a3a;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 8px rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.7);
     position: relative;
 }
 
@@ -1096,43 +1117,47 @@ input  { font-family: inherit; }
     position: absolute;
     inset: -1px;
     border-radius: 50%;
-    background: radial-gradient(circle, transparent 60%, var(--accent-glow) 100%);
+    background: radial-gradient(circle, transparent 60%, rgba(110,226,122,0.08) 100%);
     opacity: 0;
     transition: opacity 0.3s;
 }
 
-.power-btn:hover { color: var(--silver-soft); }
-.power-btn.on { color: var(--accent-bright); border-color: rgba(255, 255, 255, 0.30); }
+.power-btn:hover { color: #555; }
+.power-btn.on { color: #6ee27a; border-color: rgba(110,226,122,0.2); }
 .power-btn.on::after { opacity: 1; }
 
 .speed-pills {
     display: flex;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 18px;
     padding: 3px; gap: 2px;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .speed-pill {
     background: none;
     border: none;
     border-radius: 12px;
-    color: var(--silver-dim);
+    color: #444;
     font-family: 'DM Mono', monospace;
     font-size: 11px;
+    letter-spacing: 1px;
     padding: 5px 12px;
     transition: all 0.25s;
+    text-transform: uppercase;
 }
 
 .speed-pill sup { font-size: 8px; }
 
 .speed-pill.active {
-    background: linear-gradient(180deg, var(--accent-bright), var(--accent));
-    color: #fff;
+    background: rgba(255,255,255,0.06);
+    color: #666;
     font-weight: 500;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 12px var(--accent-glow);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 1px 3px rgba(0,0,0,0.5);
 }
+
+.speed-pill:hover:not(.active) { color: #555; }
 
 /* VU meter */
 .vu-bars {
@@ -1784,7 +1809,7 @@ input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
 /* ═══════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════ */
-@media (max-width: 1050px) {
+@media (max-width: 720px) {
     .salon {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr var(--transport-h);

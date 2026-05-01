@@ -553,6 +553,28 @@ sidebarFiles?.addEventListener('change', () => {
     sidebarFiles.value = '';
 });
 
+/* ═══ Immersive mode ═══ */
+const immersiveBtn     = $('immersiveBtn');
+const exitImmersiveBtn = $('exitImmersiveBtn');
+
+immersiveBtn.addEventListener('click', () => {
+    document.body.classList.add('immersive');
+});
+exitImmersiveBtn.addEventListener('click', () => {
+    document.body.classList.remove('immersive');
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.body.classList.contains('immersive')) {
+        document.body.classList.remove('immersive');
+        return;
+    }
+    if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        if (currentTrackIdx < 0 || busy) return;
+        isPlaying ? stopPlayback() : beginPlayback();
+    }
+});
+
 /* ═══ Init ═══ */
 renderTrackList();
 updatePlayUI();
