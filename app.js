@@ -282,7 +282,6 @@ function renderTrackList(filter = '') {
         return `<div class="track-item ${isActive ? 'active' : ''}" data-idx="${realIdx}">
             <span class="track-num">${String(i + 1).padStart(2, '0')}</span>
             <span class="track-name">${escapeHtml(t.name)}</span>
-            ${isActive ? '<span class="track-dot"></span>' : ''}
         </div>`;
     }).join('');
 
