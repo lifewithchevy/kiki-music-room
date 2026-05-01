@@ -168,7 +168,7 @@
                                 <div class="tonearm-pivot">
                                     <div class="pivot-base"></div>
                                     <div class="tonearm" id="tonearm">
-                                        <svg class="arm-svg" viewBox="-30 -2 62 262" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+                                        <svg class="arm-svg" viewBox="-30 -2 62 340" xmlns="http://www.w3.org/2000/svg" overflow="visible">
                                             <defs>
                                                 <!-- Anthracite cylinder — lit from upper-right, dark charcoal like Sony photo -->
                                                 <linearGradient id="armGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -192,77 +192,64 @@
                                                 </linearGradient>
                                             </defs>
 
-                                            <!-- Cast shadow under arm -->
-                                            <path d="M 3,6 C 8,46 11,92 8,137 C 5,175 -7,201 -9,222"
-                                                  fill="none" stroke="rgba(0,0,0,0.38)" stroke-width="18" stroke-linecap="round"/>
+                                            <!-- Cast shadow — nearly straight -->
+                                            <path d="M 2,5 C 2,90 1,195 0,278 C -1,292 -5,302 -9,306"
+                                                  fill="none" stroke="rgba(0,0,0,0.40)" stroke-width="15" stroke-linecap="round"/>
 
-                                            <!-- ── MAIN ARM TUBE — thick anthracite cylinder ── -->
-                                            <path d="M 0,0 C 5,40 8,86 5,131 C 2,170 -9,195 -11,215"
-                                                  fill="none" stroke="url(#armGrad)" stroke-width="10" stroke-linecap="round"/>
+                                            <!-- ── MAIN ARM TUBE — nearly straight Sony-style ── -->
+                                            <path d="M 0,0 C 0,90 -1,195 -2,275 C -3,287 -7,297 -11,300"
+                                                  fill="none" stroke="url(#armGrad)" stroke-width="9" stroke-linecap="round"/>
 
-                                            <!-- Broad ambient highlight (right face of cylinder) -->
-                                            <path d="M 3,0 C 8,40 11,86 8,131 C 5,170 -6,195 -8,215"
+                                            <!-- Broad ambient highlight -->
+                                            <path d="M 2,0 C 2,90 1,195 0,275 C -1,287 -5,297 -9,300"
                                                   fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4.5" stroke-linecap="round"/>
 
-                                            <!-- Sharp specular line (top right edge) -->
-                                            <path d="M 4.5,0 C 9.5,40 12.5,86 9.5,131 C 6.5,170 -4.5,195 -6.5,215"
+                                            <!-- Sharp specular line -->
+                                            <path d="M 3.5,0 C 3.5,90 2.5,195 1.5,275 C 0.5,287 -3.5,297 -7.5,300"
                                                   fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.3" stroke-linecap="round"/>
 
-                                            <!-- Bottom edge shadow (left face, underside) -->
-                                            <path d="M -4.5,0 C 0.5,40 3.5,86 0.5,131 C -2.5,170 -13.5,195 -15.5,215"
+                                            <!-- Bottom edge shadow -->
+                                            <path d="M -3.5,0 C -3.5,90 -4.5,195 -5.5,275 C -6.5,287 -10.5,297 -14.5,300"
                                                   fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.8" stroke-linecap="round"/>
 
                                             <!-- ── WRIST / NECK CONNECTOR ── -->
-                                            <!-- Thick bent neck where arm meets headshell (S-curve kink) -->
-                                            <path d="M -11,216 C -11,220 -14,222 -18,222 L -29,222"
+                                            <path d="M -11,301 C -11,305 -14,308 -18,308 L -29,308"
                                                   fill="none" stroke="#181818" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <!-- Neck top specular -->
-                                            <path d="M -10,215 C -10,219 -13,221 -17,221 L -28,221"
+                                            <path d="M -10,300 C -10,304 -13,307 -17,307 L -28,307"
                                                   fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-linecap="round"/>
-                                            <!-- Neck bottom shadow -->
-                                            <path d="M -12,217 C -12,221 -15,223 -19,223 L -30,223"
+                                            <path d="M -12,302 C -12,306 -15,309 -19,309 L -30,309"
                                                   fill="none" stroke="rgba(0,0,0,0.32)" stroke-width="1.2" stroke-linecap="round"/>
 
-                                            <!-- ── HEADSHELL — rectangular angular plate ── -->
-                                            <!-- Main plate body -->
-                                            <rect x="-31" y="218" width="24" height="13" rx="1.5" fill="url(#hsPlateGrad)"/>
-                                            <!-- Top lit surface -->
-                                            <rect x="-31" y="218" width="24" height="3.5" rx="1" fill="rgba(255,255,255,0.10)"/>
-                                            <!-- Left face (edge facing record, slightly lit) -->
-                                            <rect x="-31" y="218" width="2" height="13" rx="0.5" fill="rgba(255,255,255,0.07)"/>
-                                            <!-- Right connector shadow -->
-                                            <rect x="-9" y="218" width="2" height="13" fill="rgba(0,0,0,0.30)"/>
-                                            <!-- Bottom undercut (shadow ridge beneath plate) -->
-                                            <rect x="-31" y="228.5" width="24" height="2.5" rx="1" fill="rgba(0,0,0,0.55)"/>
+                                            <!-- ── HEADSHELL ── -->
+                                            <rect x="-31" y="304" width="24" height="13" rx="1.5" fill="url(#hsPlateGrad)"/>
+                                            <rect x="-31" y="304" width="24" height="3.5" rx="1" fill="rgba(255,255,255,0.10)"/>
+                                            <rect x="-31" y="304" width="2" height="13" rx="0.5" fill="rgba(255,255,255,0.07)"/>
+                                            <rect x="-9"  y="304" width="2" height="13" fill="rgba(0,0,0,0.30)"/>
+                                            <rect x="-31" y="314.5" width="24" height="2.5" rx="1" fill="rgba(0,0,0,0.55)"/>
 
-                                            <!-- Cartridge mounting screws — 2 bolt heads visible -->
-                                            <circle cx="-26" cy="222.5" r="1.8" fill="#050505" stroke="rgba(255,255,255,0.20)" stroke-width="0.7"/>
-                                            <line x1="-26" y1="221.2" x2="-26" y2="223.8" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/>
-                                            <circle cx="-14" cy="222.5" r="1.8" fill="#050505" stroke="rgba(255,255,255,0.20)" stroke-width="0.7"/>
-                                            <line x1="-14" y1="221.2" x2="-14" y2="223.8" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/>
+                                            <!-- Screws -->
+                                            <circle cx="-26" cy="308.5" r="1.8" fill="#050505" stroke="rgba(255,255,255,0.20)" stroke-width="0.7"/>
+                                            <line x1="-26" y1="307.2" x2="-26" y2="309.8" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/>
+                                            <circle cx="-14" cy="308.5" r="1.8" fill="#050505" stroke="rgba(255,255,255,0.20)" stroke-width="0.7"/>
+                                            <line x1="-14" y1="307.2" x2="-14" y2="309.8" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/>
 
-                                            <!-- ── CARTRIDGE BODY — sits below headshell ── -->
-                                            <rect x="-29" y="231" width="18" height="11" rx="2" fill="url(#cartGrad)"/>
-                                            <!-- Cartridge top rim (tiny highlight) -->
-                                            <rect x="-29" y="231" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.05)"/>
-                                            <!-- Cartridge groove lines (body detail) -->
-                                            <line x1="-28.5" y1="235" x2="-12.5" y2="235" stroke="rgba(0,0,0,0.45)" stroke-width="0.8"/>
-                                            <line x1="-28.5" y1="238" x2="-12.5" y2="238" stroke="rgba(0,0,0,0.30)" stroke-width="0.6"/>
-                                            <!-- Left side panel edge -->
-                                            <rect x="-29" y="231" width="1.2" height="11" rx="0.5" fill="rgba(255,255,255,0.04)"/>
+                                            <!-- ── CARTRIDGE BODY ── -->
+                                            <rect x="-29" y="317" width="18" height="11" rx="2" fill="url(#cartGrad)"/>
+                                            <rect x="-29" y="317" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.05)"/>
+                                            <line x1="-28.5" y1="321" x2="-12.5" y2="321" stroke="rgba(0,0,0,0.45)" stroke-width="0.8"/>
+                                            <line x1="-28.5" y1="324" x2="-12.5" y2="324" stroke="rgba(0,0,0,0.30)" stroke-width="0.6"/>
+                                            <rect x="-29" y="317" width="1.2" height="11" rx="0.5" fill="rgba(255,255,255,0.04)"/>
 
-                                            <!-- ── CANTILEVER — thin wire from cartridge ── -->
-                                            <line x1="-20" y1="242" x2="-20" y2="250"
-                                                  stroke="#aaaaaa" stroke-width="1.1" stroke-linecap="round"/>
-                                            <!-- Cantilever suspension rubber -->
-                                            <ellipse cx="-20" cy="243" rx="2" ry="1.5" fill="#1a1a1a" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+                                            <!-- ── CANTILEVER ── -->
+                                            <line x1="-20" y1="328" x2="-20" y2="334" stroke="#aaaaaa" stroke-width="1.1" stroke-linecap="round"/>
+                                            <ellipse cx="-20" cy="329" rx="2" ry="1.5" fill="#1a1a1a" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
 
-                                            <!-- ── STYLUS — tiny diamond tip (top-down, just the point) ── -->
-                                            <circle cx="-20" cy="252" r="1.8" fill="rgba(200,215,235,0.95)"/>
-                                            <circle cx="-20.4" cy="251.4" r="0.7" fill="rgba(255,255,255,0.8)"/>
+                                            <!-- ── STYLUS — tiny tip ── -->
+                                            <circle cx="-20" cy="336" r="1.8" fill="rgba(200,215,235,0.95)"/>
+                                            <circle cx="-20.4" cy="335.4" r="0.7" fill="rgba(255,255,255,0.8)"/>
 
                                             <!-- Wide transparent hit zone -->
-                                            <rect x="-30" y="-2" width="62" height="262" fill="transparent" style="cursor:pointer"/>
+                                            <rect x="-30" y="-2" width="62" height="340" fill="transparent" style="cursor:pointer"/>
                                         </svg>
                                     </div>
                                     <div class="pivot-cap"></div>
