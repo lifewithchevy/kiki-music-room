@@ -519,6 +519,11 @@ body.immersive .hero-stage {
 
 body.immersive .exit-immersive-btn { display: flex; }
 
+body.immersive .cabinet-wrap {
+    transform: scale(1.48);
+    transform-origin: center center;
+}
+
 /* ═══════════════════════════════════════════════════════════
    HERO STAGE — Turntable as the center focus
    ═══════════════════════════════════════════════════════════ */
