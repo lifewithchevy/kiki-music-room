@@ -1064,8 +1064,8 @@ body.immersive .cabinet-wrap {
     cursor: pointer;
     user-select: none;
 }
-.ctrl-dial-size  { top: 70px; }
-.ctrl-dial-speed { top: 140px; }
+.ctrl-dial-size  { top: 150px; }
+.ctrl-dial-speed { top: 220px; }
 
 .ctrl-dial-hd {
     font-size: 5.5px;
@@ -1144,16 +1144,14 @@ body.immersive .cabinet-wrap {
 /* ═══ BLUETOOTH BUTTON ═══ */
 .bt-btn {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
 }
 .bt-circle {
-    width: 38px; height: 38px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     background: radial-gradient(circle at 38% 32%, #1c1c1c, #070707);
     border: 1px solid rgba(255,255,255,0.05);
@@ -1204,9 +1202,9 @@ body.immersive .cabinet-wrap {
 
 .ctrl-group {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 .ctrl-label {
