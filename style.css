@@ -870,7 +870,7 @@ body.immersive .cabinet-wrap {
 /* Large rest — cup cradle under the upper arm body */
 .tonearm-rest {
     position: absolute;
-    top: 96px; right: 52px;
+    top: 96px; right: 64px;
     width: 16px; height: 26px;
     z-index: 4;
     pointer-events: none;
@@ -908,7 +908,7 @@ body.immersive .cabinet-wrap {
 /* Small rest — middle right, next to vinyl */
 .tonearm-rest-small {
     position: absolute;
-    top: 170px; right: 45px;
+    top: 170px; right: 65px;
     width: 13px; height: 24px;
     z-index: 5;
     pointer-events: none;
@@ -1020,16 +1020,16 @@ body.immersive .cabinet-wrap {
     width: 56px;
     height: 0;
     transform-origin: 28px 0;
-    transform: rotate(-8deg);
+    transform: rotate(0deg);
     transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.25, 1);
     cursor: pointer;
     z-index: 11;
     pointer-events: auto;
 }
 
-.tonearm.cued-up        { transform: rotate(-8deg) translateY(-8px); }
-.tonearm.over-record-up { transform: rotate(16deg)  translateY(-8px); }
-.tonearm.over-record    { transform: rotate(16deg)  translateY(0); transition-duration: 0.45s; }
+.tonearm.cued-up        { transform: rotate(0deg)  translateY(-8px); }
+.tonearm.over-record-up { transform: rotate(16deg) translateY(-8px); }
+.tonearm.over-record    { transform: rotate(16deg) translateY(0); transition-duration: 0.45s; }
 
 /* SVG arm — full single-piece arm from pivot to stylus */
 .arm-svg {
