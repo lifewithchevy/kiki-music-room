@@ -1062,17 +1062,17 @@ body.immersive .cabinet-wrap {
     cursor: pointer;
     user-select: none;
 }
-.ctrl-dial-size  { top: 120px; }
-.ctrl-dial-speed { top: 200px; }
+.ctrl-dial-size  { top: 70px; }
+.ctrl-dial-speed { top: 140px; }
 
 .ctrl-dial-hd {
-    font-size: 7px;
-    letter-spacing: 2.5px;
+    font-size: 5.5px;
+    letter-spacing: 2px;
     color: #3e3e3e;
     text-transform: uppercase;
     font-weight: 500;
     text-align: right;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     padding-right: 1px;
 }
 .ctrl-dial-row {
@@ -1088,7 +1088,7 @@ body.immersive .cabinet-wrap {
     gap: 13px;
 }
 .cdm {
-    font-size: 9px;
+    font-size: 7px;
     color: #2e2e2e;
     font-family: 'DM Mono', monospace;
     letter-spacing: 0.5px;
