@@ -172,70 +172,106 @@
                                 <div class="tonearm-pivot">
                                     <div class="pivot-base"></div>
                                     <div class="tonearm" id="tonearm">
-                                        <svg class="arm-svg" viewBox="-30 -2 62 240" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+                                        <svg class="arm-svg" viewBox="-30 -2 62 242" xmlns="http://www.w3.org/2000/svg" overflow="visible">
                                             <defs>
-                                                <!-- 3D cylindrical arm — lit from right edge -->
+                                                <!-- Anthracite cylinder — lit from upper-right, dark charcoal like Sony photo -->
                                                 <linearGradient id="armGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                    <stop offset="0%"   stop-color="#262626"/>
-                                                    <stop offset="20%"  stop-color="#181818"/>
-                                                    <stop offset="50%"  stop-color="#070707"/>
-                                                    <stop offset="80%"  stop-color="#141414"/>
-                                                    <stop offset="100%" stop-color="#202020"/>
+                                                    <stop offset="0%"   stop-color="#141414"/>
+                                                    <stop offset="18%"  stop-color="#0d0d0d"/>
+                                                    <stop offset="42%"  stop-color="#070707"/>
+                                                    <stop offset="65%"  stop-color="#111111"/>
+                                                    <stop offset="82%"  stop-color="#1d1d1d"/>
+                                                    <stop offset="100%" stop-color="#2a2a2a"/>
                                                 </linearGradient>
-                                                <!-- Headshell top-lit gradient -->
-                                                <linearGradient id="hsBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                    <stop offset="0%"   stop-color="#1e1e1e"/>
-                                                    <stop offset="45%"  stop-color="#0e0e0e"/>
-                                                    <stop offset="100%" stop-color="#050505"/>
+                                                <!-- Headshell plate — flat top-lit anthracite -->
+                                                <linearGradient id="hsPlateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%"   stop-color="#222222"/>
+                                                    <stop offset="35%"  stop-color="#141414"/>
+                                                    <stop offset="100%" stop-color="#070707"/>
+                                                </linearGradient>
+                                                <!-- Cartridge body gradient -->
+                                                <linearGradient id="cartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%"   stop-color="#1a1a1a"/>
+                                                    <stop offset="100%" stop-color="#080808"/>
                                                 </linearGradient>
                                             </defs>
 
-                                            <!-- Ground shadow -->
-                                            <path d="M 2,4 C 7,44 10,90 7,135 C 4,162 -8,177 -10,197"
-                                                  fill="none" stroke="rgba(0,0,0,0.48)" stroke-width="13" stroke-linecap="round"/>
+                                            <!-- Cast shadow under arm -->
+                                            <path d="M 3,6 C 8,46 11,92 8,137 C 5,164 -7,179 -9,200"
+                                                  fill="none" stroke="rgba(0,0,0,0.38)" stroke-width="18" stroke-linecap="round"/>
 
-                                            <!-- Main arm tube — S-curve, thicker for realism -->
-                                            <path d="M 0,0 C 5,40 8,86 5,131 C 2,158 -9,173 -11,192"
-                                                  fill="none" stroke="url(#armGrad)" stroke-width="7" stroke-linecap="round"/>
+                                            <!-- ── MAIN ARM TUBE — thick anthracite cylinder ── -->
+                                            <path d="M 0,0 C 5,40 8,86 5,131 C 2,158 -9,173 -11,193"
+                                                  fill="none" stroke="url(#armGrad)" stroke-width="10" stroke-linecap="round"/>
 
-                                            <!-- Right-edge specular (3D roundness) -->
-                                            <path d="M 2.5,0 C 7.5,40 10.5,86 7.5,131 C 4.5,158 -6.5,173 -8.5,192"
-                                                  fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="2" stroke-linecap="round"/>
+                                            <!-- Broad ambient highlight (right face of cylinder) -->
+                                            <path d="M 3,0 C 8,40 11,86 8,131 C 5,158 -6,173 -8,193"
+                                                  fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4.5" stroke-linecap="round"/>
 
-                                            <!-- Arm-to-headshell neck — angled connector ("wrist") -->
-                                            <path d="M -11,193 L -11,198 L -27,198"
-                                                  fill="none" stroke="#161616" stroke-width="6" stroke-linecap="square" stroke-linejoin="miter"/>
-                                            <path d="M -11,193 L -11,196.5 L -27,196.5"
-                                                  fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.2" stroke-linecap="square" stroke-linejoin="miter"/>
+                                            <!-- Sharp specular line (top right edge) -->
+                                            <path d="M 4.5,0 C 9.5,40 12.5,86 9.5,131 C 6.5,158 -4.5,173 -6.5,193"
+                                                  fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.3" stroke-linecap="round"/>
 
-                                            <!-- Sony-style angular headshell body -->
-                                            <rect x="-29" y="194" width="22" height="15" rx="1.5" fill="url(#hsBodyGrad)"/>
-                                            <!-- Top face lit highlight -->
-                                            <rect x="-29" y="194" width="22" height="3" rx="1" fill="rgba(255,255,255,0.08)"/>
-                                            <!-- Left-edge rim -->
-                                            <rect x="-29" y="194" width="1.5" height="15" fill="rgba(255,255,255,0.05)"/>
-                                            <!-- Bottom undercut shadow -->
-                                            <rect x="-29" y="206" width="22" height="3" rx="1" fill="rgba(0,0,0,0.45)"/>
+                                            <!-- Bottom edge shadow (left face, underside) -->
+                                            <path d="M -4.5,0 C 0.5,40 3.5,86 0.5,131 C -2.5,158 -13.5,173 -15.5,193"
+                                                  fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.8" stroke-linecap="round"/>
 
-                                            <!-- Mounting screws (cartridge anchor bolts) -->
-                                            <circle cx="-24.5" cy="199" r="1.4" fill="#060606" stroke="rgba(255,255,255,0.16)" stroke-width="0.6"/>
-                                            <circle cx="-13.5" cy="199" r="1.4" fill="#060606" stroke="rgba(255,255,255,0.16)" stroke-width="0.6"/>
+                                            <!-- ── WRIST / NECK CONNECTOR ── -->
+                                            <!-- Thick bent neck where arm meets headshell (S-curve kink) -->
+                                            <path d="M -11,194 C -11,198 -14,200 -18,200 L -29,200"
+                                                  fill="none" stroke="#181818" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <!-- Neck top specular -->
+                                            <path d="M -10,193 C -10,197 -13,199 -17,199 L -28,199"
+                                                  fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-linecap="round"/>
+                                            <!-- Neck bottom shadow -->
+                                            <path d="M -12,195 C -12,199 -15,201 -19,201 L -30,201"
+                                                  fill="none" stroke="rgba(0,0,0,0.32)" stroke-width="1.2" stroke-linecap="round"/>
 
-                                            <!-- Cartridge body — angular block -->
-                                            <rect x="-27" y="209" width="16" height="10" rx="1.5" fill="#0b0b0b"/>
-                                            <rect x="-27" y="209" width="16" height="2.5" rx="1"   fill="rgba(255,255,255,0.04)"/>
-                                            <rect x="-27" y="215" width="1"   height="4"            fill="rgba(255,255,255,0.05)"/>
+                                            <!-- ── HEADSHELL — rectangular angular plate ── -->
+                                            <!-- Main plate body -->
+                                            <rect x="-31" y="196" width="24" height="13" rx="1.5" fill="url(#hsPlateGrad)"/>
+                                            <!-- Top lit surface -->
+                                            <rect x="-31" y="196" width="24" height="3.5" rx="1" fill="rgba(255,255,255,0.10)"/>
+                                            <!-- Left face (edge facing record, slightly lit) -->
+                                            <rect x="-31" y="196" width="2" height="13" rx="0.5" fill="rgba(255,255,255,0.07)"/>
+                                            <!-- Right connector shadow -->
+                                            <rect x="-9" y="196" width="2" height="13" fill="rgba(0,0,0,0.30)"/>
+                                            <!-- Bottom undercut (shadow ridge beneath plate) -->
+                                            <rect x="-31" y="206.5" width="24" height="2.5" rx="1" fill="rgba(0,0,0,0.55)"/>
 
-                                            <!-- Cantilever wire -->
-                                            <line x1="-19" y1="219" x2="-19" y2="226"
-                                                  stroke="#888" stroke-width="1.2" stroke-linecap="round"/>
+                                            <!-- Cartridge mounting screws — 2 bolt heads visible -->
+                                            <circle cx="-26" cy="200.5" r="1.8" fill="#050505" stroke="rgba(255,255,255,0.20)" stroke-width="0.7"/>
+                                            <line x1="-26" y1="199.2" x2="-26" y2="201.8" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/>
+                                            <circle cx="-14" cy="200.5" r="1.8" fill="#050505" stroke="rgba(255,255,255,0.20)" stroke-width="0.7"/>
+                                            <line x1="-14" y1="199.2" x2="-14" y2="201.8" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/>
 
-                                            <!-- Stylus diamond tip -->
-                                            <ellipse cx="-19" cy="228" rx="2.2" ry="2.5" fill="rgba(255,255,255,0.88)"/>
-                                            <circle  cx="-19" cy="227" r="1"                fill="#d0d0d0"/>
+                                            <!-- ── CARTRIDGE BODY — sits below headshell ── -->
+                                            <rect x="-29" y="209" width="18" height="11" rx="2" fill="url(#cartGrad)"/>
+                                            <!-- Cartridge top rim (tiny highlight) -->
+                                            <rect x="-29" y="209" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.05)"/>
+                                            <!-- Cartridge groove lines (body detail) -->
+                                            <line x1="-28.5" y1="213" x2="-12.5" y2="213" stroke="rgba(0,0,0,0.45)" stroke-width="0.8"/>
+                                            <line x1="-28.5" y1="216" x2="-12.5" y2="216" stroke="rgba(0,0,0,0.30)" stroke-width="0.6"/>
+                                            <!-- Left side panel edge -->
+                                            <rect x="-29" y="209" width="1.2" height="11" rx="0.5" fill="rgba(255,255,255,0.04)"/>
 
-                                            <!-- Wide invisible hit zone over entire arm -->
-                                            <rect x="-30" y="-2" width="62" height="240" fill="transparent" style="cursor:pointer"/>
+                                            <!-- ── CANTILEVER — thin wire from cartridge ── -->
+                                            <line x1="-20" y1="220" x2="-20" y2="228"
+                                                  stroke="#aaaaaa" stroke-width="1.1" stroke-linecap="round"/>
+                                            <!-- Cantilever suspension rubber -->
+                                            <ellipse cx="-20" cy="221" rx="2" ry="1.5" fill="#1a1a1a" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+
+                                            <!-- ── STYLUS — diamond tip ── -->
+                                            <!-- Tip body (tiny teardrop shape) -->
+                                            <path d="M -22,230 Q -20,224 -18,230 Q -20,234 -22,230 Z"
+                                                  fill="rgba(230,235,245,0.92)"/>
+                                            <!-- Specular on stylus -->
+                                            <ellipse cx="-20.5" cy="228" rx="0.8" ry="1.2" fill="rgba(255,255,255,0.65)"/>
+                                            <!-- Diamond tip point -->
+                                            <circle cx="-20" cy="232" r="0.9" fill="rgba(200,215,235,0.95)"/>
+
+                                            <!-- Wide transparent hit zone -->
+                                            <rect x="-30" y="-2" width="62" height="242" fill="transparent" style="cursor:pointer"/>
                                         </svg>
                                     </div>
                                     <div class="pivot-cap"></div>
