@@ -864,11 +864,12 @@ body.immersive .cabinet-wrap {
     box-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
-/* ═══ TONEARM REST CRADLE ═══ */
+/* ═══ TONEARM REST CRADLES ═══ */
+/* Large rest — near pivot/cylinder area at top right */
 .tonearm-rest {
     position: absolute;
-    top: 308px; right: 28px;
-    width: 16px; height: 28px;
+    top: 24px; right: 4px;
+    width: 18px; height: 36px;
     z-index: 5;
     pointer-events: none;
 }
@@ -892,9 +893,45 @@ body.immersive .cabinet-wrap {
 .tonearm-rest::after {
     content: '';
     position: absolute;
+    top: 9px; left: 50%;
+    transform: translateX(-50%);
+    width: 6px; height: 27px;
+    background: linear-gradient(90deg, #181818 0%, #0e0e0e 40%, #141414 70%, #1c1c1c 100%);
+    border-radius: 3px;
+    box-shadow:
+        inset 1px 0 0 rgba(255,255,255,0.08),
+        1px 0 3px rgba(0,0,0,0.6);
+}
+
+/* Small rest — middle right, next to vinyl */
+.tonearm-rest-small {
+    position: absolute;
+    top: 210px; right: 8px;
+    width: 13px; height: 24px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.tonearm-rest-small::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 13px; height: 7px;
+    background: radial-gradient(ellipse at 50% 0%, #2a2a2a 0%, #111111 60%, #080808 100%);
+    border-radius: 0 0 6px 6px;
+    box-shadow:
+        inset 0 -2px 4px rgba(0,0,0,0.7),
+        inset 0 2px 0 rgba(255,255,255,0.08),
+        0 2px 6px rgba(0,0,0,0.6);
+}
+
+.tonearm-rest-small::after {
+    content: '';
+    position: absolute;
     top: 7px; left: 50%;
     transform: translateX(-50%);
-    width: 6px; height: 21px;
+    width: 5px; height: 17px;
     background: linear-gradient(90deg, #181818 0%, #0e0e0e 40%, #141414 70%, #1c1c1c 100%);
     border-radius: 3px;
     box-shadow:
@@ -905,38 +942,38 @@ body.immersive .cabinet-wrap {
 /* ═══ TONEARM ASSEMBLY ═══ */
 .tonearm-assembly {
     position: absolute;
-    top: -10px; right: 5px;
-    width: 130px; height: 340px;
+    top: -52px; right: 2px;
+    width: 130px; height: 400px;
     z-index: 6;
     pointer-events: auto;
     cursor: pointer;
 }
 
-/* Counterweight + shaft */
+/* Counterweight + vertical shaft — stacked above pivot */
 .tonearm-base-mount {
     position: absolute;
-    top: 4px; right: 0;
-    width: 78px; height: 36px;
+    top: 2px; right: 44px;
+    width: 44px; height: 62px;
     pointer-events: auto;
 }
 
-/* Shaft connecting counterweight to pivot */
+/* Vertical shaft connecting counterweight down to pivot */
 .cw-shaft {
     position: absolute;
-    top: 14px; right: 32px;
-    width: 36px; height: 8px;
-    background: linear-gradient(180deg, #252525 0%, #141414 45%, #0a0a0a 100%);
+    top: 33px; left: 18px;
+    width: 8px; height: 28px;
+    background: linear-gradient(90deg, #252525 0%, #141414 45%, #0a0a0a 100%);
     border-radius: 4px;
     box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.10),
-        inset 0 -1px 0 rgba(0,0,0,0.5),
-        0 2px 4px rgba(0,0,0,0.6);
+        inset 1px 0 0 rgba(255,255,255,0.10),
+        inset -1px 0 0 rgba(0,0,0,0.5),
+        2px 0 4px rgba(0,0,0,0.6);
 }
 
 /* Counterweight — large cylindrical disc, Sony style */
 .counterweight {
     position: absolute;
-    top: 2px; right: 0;
+    top: 0; left: 5px;
     width: 34px; height: 32px;
     border-radius: 50%;
     background:
@@ -965,7 +1002,7 @@ body.immersive .cabinet-wrap {
 /* Pivot bearing housing — large round cap like Sony photo */
 .tonearm-pivot {
     position: absolute;
-    top: 8px; right: 62px;
+    top: 64px; right: 44px;
     width: 42px; height: 42px;
 }
 
@@ -1046,7 +1083,7 @@ body.immersive .cabinet-wrap {
 .arm-svg {
     position: absolute;
     top: 0; left: 0;
-    width: 56px; height: 228px;
+    width: 56px; height: 248px;
     overflow: visible;
     pointer-events: none;
 }
