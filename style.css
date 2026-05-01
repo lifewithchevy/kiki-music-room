@@ -870,7 +870,7 @@ body.immersive .cabinet-wrap {
     position: absolute;
     top: 96px; right: 52px;
     width: 16px; height: 26px;
-    z-index: 7;
+    z-index: 4;
     pointer-events: none;
 }
 
