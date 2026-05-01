@@ -191,18 +191,6 @@
                                 </div>
                             </div>
 
-                            <!-- Bluetooth pairing button -->
-                            <button class="bt-btn" id="btBtn">
-                                <div class="bt-circle">
-                                    <svg viewBox="0 0 16 22" width="11" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                                        <line x1="8" y1="2" x2="8" y2="20"/>
-                                        <polyline points="3,6 8,2 13,6 8,10"/>
-                                        <polyline points="3,16 8,20 13,16 8,12"/>
-                                    </svg>
-                                </div>
-                                <span class="bt-label">— PAIRING</span>
-                            </button>
-
                             <!-- Tonearm assembly — entire zone is clickable -->
                             <div class="tonearm-assembly" id="tonearmAssembly">
                                 <div class="tonearm-pivot">
@@ -297,8 +285,20 @@
                             </div>
                         </div>
 
-                        <!-- Cabinet controls — Power -->
+                        <!-- Cabinet controls — BT · Power -->
                         <div class="cabinet-controls">
+                            <!-- Bluetooth pairing button -->
+                            <button class="bt-btn" id="btBtn">
+                                <div class="bt-circle">
+                                    <svg viewBox="0 0 16 22" width="11" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="8" y1="2" x2="8" y2="20"/>
+                                        <polyline points="3,6 8,2 13,6 8,10"/>
+                                        <polyline points="3,16 8,20 13,16 8,12"/>
+                                    </svg>
+                                </div>
+                                <span class="bt-label">— PAIRING</span>
+                            </button>
+
                             <div class="ctrl-group">
                                 <div class="motor-status" id="motorStatus"></div>
                                 <button class="power-btn" id="powerBtn" title="Power">
