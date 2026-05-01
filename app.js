@@ -540,7 +540,7 @@ const QUICK_COLORS = [
 const MAX_TRACKS = 15;
 
 sidebarFiles?.addEventListener('change', () => {
-    let files = Array.from(sidebarFiles.files);
+    let files = Array.from(sidebarFiles.files).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
     if (!files.length) return;
     if (files.length > MAX_TRACKS) files = files.slice(0, MAX_TRACKS);
 
