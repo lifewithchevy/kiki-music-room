@@ -583,6 +583,28 @@ document.addEventListener('keydown', e => {
     }
 });
 
+/* ═══ Mobile playlist sheet ═══ */
+(() => {
+    const btn = document.getElementById('mobilePLBtn');
+    const sidebar = document.querySelector('.sidebar');
+    if (!btn || !sidebar) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-overlay';
+    document.body.appendChild(overlay);
+
+    const open  = () => { sidebar.classList.add('mobile-open');    overlay.classList.add('visible'); };
+    const close = () => { sidebar.classList.remove('mobile-open'); overlay.classList.remove('visible'); };
+
+    btn.addEventListener('click', () => sidebar.classList.contains('mobile-open') ? close() : open());
+    overlay.addEventListener('click', close);
+
+    /* Auto-close when a track is tapped on mobile */
+    sidebar.addEventListener('click', e => {
+        if (e.target.closest('.track-row') && window.innerWidth <= 720) close();
+    });
+})();
+
 /* ═══ Init ═══ */
 renderTrackList();
 updatePlayUI();
