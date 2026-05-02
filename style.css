@@ -519,6 +519,13 @@ body.immersive .hero-stage {
 
 body.immersive .exit-immersive-btn { display: flex; }
 
+body.immersive,
+body.immersive * { cursor: none !important; }
+
+/* Idle cursor hide on normal mode */
+body.cursor-idle,
+body.cursor-idle * { cursor: none !important; }
+
 body.immersive .cabinet-wrap {
     transform: scale(1.48);
     transform-origin: center center;

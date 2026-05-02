@@ -600,6 +600,21 @@ document.addEventListener('keydown', e => {
     }
 });
 
+/* ═══ Cursor idle hide ═══ */
+(() => {
+    let idleTimer;
+    const IDLE_MS = 3000;
+    const hide = () => document.body.classList.add('cursor-idle');
+    const show = () => {
+        document.body.classList.remove('cursor-idle');
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(hide, IDLE_MS);
+    };
+    document.addEventListener('mousemove', show, { passive: true });
+    document.addEventListener('mousedown', show, { passive: true });
+    idleTimer = setTimeout(hide, IDLE_MS);
+})();
+
 /* ═══ Mobile playlist sheet ═══ */
 (() => {
     const btn = document.getElementById('mobilePLBtn');
