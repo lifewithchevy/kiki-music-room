@@ -520,7 +520,11 @@ body.immersive .hero-stage {
 body.immersive .exit-immersive-btn { display: flex; }
 
 body.immersive,
-body.immersive * { cursor: none !important; }
+body.immersive *,
+:fullscreen,
+:fullscreen *,
+:-webkit-full-screen,
+:-webkit-full-screen * { cursor: none !important; }
 
 /* Idle cursor hide on normal mode */
 body.cursor-idle,
