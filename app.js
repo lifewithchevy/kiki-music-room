@@ -565,15 +565,32 @@ sidebarFiles?.addEventListener('change', () => {
 const immersiveBtn     = $('immersiveBtn');
 const exitImmersiveBtn = $('exitImmersiveBtn');
 
-immersiveBtn.addEventListener('click', () => {
+function enterImmersive() {
     document.body.classList.add('immersive');
-});
-exitImmersiveBtn.addEventListener('click', () => {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (req) req.call(el).catch(() => {});
+}
+function exitImmersive() {
     document.body.classList.remove('immersive');
+    const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (exit && document.fullscreenElement) exit.call(document).catch(() => {});
+}
+
+immersiveBtn.addEventListener('click', enterImmersive);
+exitImmersiveBtn.addEventListener('click', exitImmersive);
+
+/* Sync immersive class if user exits fullscreen via browser (Esc, F11, etc.) */
+document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) document.body.classList.remove('immersive');
 });
+document.addEventListener('webkitfullscreenchange', () => {
+    if (!document.webkitFullscreenElement) document.body.classList.remove('immersive');
+});
+
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.body.classList.contains('immersive')) {
-        document.body.classList.remove('immersive');
+        exitImmersive();
         return;
     }
     if (e.code === 'Space' && e.target === document.body) {
