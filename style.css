@@ -519,12 +519,7 @@ body.immersive .hero-stage {
 
 body.immersive .exit-immersive-btn { display: flex; }
 
-body.immersive,
-body.immersive *,
-:fullscreen,
-:fullscreen *,
-:-webkit-full-screen,
-:-webkit-full-screen * { cursor: none !important; }
+/* cursor-idle hides it after 3s inactivity — works in both normal and fullscreen */
 
 /* Idle cursor hide on normal mode */
 body.cursor-idle,

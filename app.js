@@ -567,6 +567,7 @@ const exitImmersiveBtn = $('exitImmersiveBtn');
 
 function enterImmersive() {
     document.body.classList.add('immersive');
+    document.body.classList.remove('cursor-idle'); // show cursor, 3s timer restarts via mousemove
     const el = document.documentElement;
     const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
     if (req) req.call(el).catch(() => {});
