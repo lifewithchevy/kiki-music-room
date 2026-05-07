@@ -157,6 +157,8 @@ input  { font-family: inherit; }
     color: var(--accent-bright);
     line-height: 1;
     letter-spacing: 0.5px;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: 'lnum' 1;
 }
 
 .brand-tagline {
