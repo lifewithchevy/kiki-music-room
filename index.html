@@ -54,15 +54,6 @@
                 <div class="link-add-status" id="linkStatus"></div>
             </div>
 
-            <!-- Customize / create a room -->
-            <button class="customize-btn" id="customizeBtn">
-                <svg viewBox="0 0 20 20" fill="none" width="16" height="16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="10" cy="10" r="2.4"/>
-                    <path d="M10 2.2v2M10 15.8v2M2.2 10h2M15.8 10h2M4.6 4.6l1.4 1.4M14 14l1.4 1.4M15.4 4.6 14 6M6 14l-1.4 1.4"/>
-                </svg>
-                <span>Customize &amp; share room</span>
-            </button>
-
         </div>
 
         <!-- Track list -->
@@ -429,85 +420,6 @@
         </div>
     </aside>
 
-    <!-- ═══ CUSTOMIZE / CREATE ROOM MODAL ═══ -->
-    <div class="modal-overlay hidden" id="roomModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>Customize &amp; share your room</h3>
-                <button class="modal-close" id="roomModalClose">×</button>
-            </div>
-
-            <p class="modal-intro">Make it personal, then copy the link and send it as a gift. Changes preview live behind this window.</p>
-
-            <div class="form-row">
-                <label>Quick looks</label>
-                <div class="preset-row">
-                    <button class="preset-chip" data-preset="walnut" type="button">
-                        <span class="preset-dot" style="background:linear-gradient(135deg,#5a3a1c,#2e1c09)"></span>Walnut
-                    </button>
-                    <button class="preset-chip" data-preset="redwood" type="button">
-                        <span class="preset-dot" style="background:linear-gradient(135deg,#6e1f1f,#2a0c0c)"></span>Red wood
-                    </button>
-                    <button class="preset-chip" data-preset="technics" type="button">
-                        <span class="preset-dot" style="background:linear-gradient(135deg,#e2202e,#8a0c16)"></span>Technics red
-                    </button>
-                    <button class="preset-chip" data-preset="midnight" type="button">
-                        <span class="preset-dot" style="background:linear-gradient(135deg,#2f3754,#0c0f18)"></span>Midnight
-                    </button>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <label>Greeting</label>
-                <input type="text" id="cfgTitle" placeholder="Happy Birthday" autocomplete="off"/>
-            </div>
-            <div class="form-row">
-                <label>Subtitle</label>
-                <input type="text" id="cfgSubtitle" placeholder="Your vinyl is ready. Enjoy sis." autocomplete="off"/>
-            </div>
-            <div class="form-grid-2">
-                <div class="form-row">
-                    <label>Room name</label>
-                    <input type="text" id="cfgName" placeholder="85 Vinyls" autocomplete="off"/>
-                </div>
-                <div class="form-row">
-                    <label>Their name (label)</label>
-                    <input type="text" id="cfgArtist" placeholder="Sofia" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="form-grid-2">
-                <div class="form-row">
-                    <label>Background (wood)</label>
-                    <div class="color-field">
-                        <input type="color" id="cfgWood" value="#3c2610"/>
-                        <span class="color-field-hint">Cabinet panel</span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <label>Turntable color</label>
-                    <div class="color-field">
-                        <input type="color" id="cfgTurntable" value="#0d0d0d"/>
-                        <span class="color-field-hint">Player body</span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <label>Tonearm accent</label>
-                <div class="seg-control">
-                    <button class="seg-opt active" data-group="accent" data-value="silver" type="button">Silver</button>
-                    <button class="seg-opt" data-group="accent" data-value="gold" type="button">Gold</button>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <label>Share link</label>
-                <div class="share-row">
-                    <input type="text" id="cfgShareLink" readonly/>
-                    <button class="btn-save" id="cfgCopyBtn">Copy share link</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>
 
