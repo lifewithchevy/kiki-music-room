@@ -14,7 +14,39 @@ const DEFAULT_ROOM = {
     turntable: '#511010',
     bgStyle:   'photo',    // 'wood' | 'pegboard' | 'photo'
     accent:    'gold',     // 'silver' | 'gold'  (tonearm tint)
-    tracks:    []   // [{ name, src, type:'youtube'|'audio', color }] — Ava's songs go here
+    tracks: [
+        { name: "KATSEYE - PINKY UP", type: 'youtube', ytId: "k3VwwLeorsU", color: "#8b3a3a" },
+        { name: "KATSEYE - Debut", type: 'youtube', ytId: "bYg6aMDQ_TA", color: "#a0552c" },
+        { name: "KATSEYE - Touch", type: 'youtube', ytId: "l9CZykYZkOQ", color: "#c4953a" },
+        { name: "KATSEYE - My Way", type: 'youtube', ytId: "1P8BbTY8gWo", color: "#3d5a4a" },
+        { name: "KATSEYE - I'm Pretty", type: 'youtube', ytId: "xQl4jd77bGY", color: "#2c4858" },
+        { name: "KATSEYE - Tonight I Might", type: 'youtube', ytId: "6oqywcXsQik", color: "#5a3d6a" },
+        { name: "KATSEYE - Touch (ft. YEONJUN of TOMORROW X TOGETHER)", type: 'youtube', ytId: "86cojHkoefk", color: "#6b4226" },
+        { name: "KATSEYE - Flame (from the Netflix Series \"Jentry Chau vs the Underworld\")", type: 'youtube', ytId: "xfK2-3UTy7M", color: "#7a3f2a" },
+        { name: "KATSEYE - Gnarly", type: 'youtube', ytId: "R2-yomhYAj4", color: "#3a5a3a" },
+        { name: "KATSEYE - Gnarly - Ice Spice Remix", type: 'youtube', ytId: "lNzLuzmx5aY", color: "#4a4a6a" },
+        { name: "KATSEYE - Gabriela", type: 'youtube', ytId: "CjnB56tSCQI", color: "#8b3a3a" },
+        { name: "KATSEYE - Gameboy", type: 'youtube', ytId: "-bC4iak3kxg", color: "#a0552c" },
+        { name: "KATSEYE - Mean Girls", type: 'youtube', ytId: "DlqlItmeQ0o", color: "#c4953a" },
+        { name: "KATSEYE - M.I.A", type: 'youtube', ytId: "4H7ZJQPPThY", color: "#3d5a4a" },
+        { name: "KATSEYE - Time Lapse", type: 'youtube', ytId: "cTfUNqPiA4E", color: "#2c4858" },
+        { name: "Monster High - Monster High Fright Song", type: 'youtube', ytId: "BxY5l4ZK61I", color: "#5a3d6a" },
+        { name: "YEONJUN - Let Me Tell You (feat. Daniela of KATSEYE)", type: 'youtube', ytId: "2xbTnB6we0Q", color: "#6b4226" },
+        { name: "KATSEYE - M.I.A - VALORANT Game Changers Version", type: 'youtube', ytId: "mX-dgjFS6eY", color: "#7a3f2a" },
+        { name: "KATSEYE - Internet Girl", type: 'youtube', ytId: "5q9EjSUovc4", color: "#3a5a3a" },
+        { name: "LE SSERAFIM - SPAGHETTI (Member ver.)", type: 'youtube', ytId: "rQSDEVfYFnE", color: "#4a4a6a" },
+        { name: "ILLIT - NOT CUTE ANYMORE", type: 'youtube', ytId: "x_RYZsOfpKY", color: "#8b3a3a" },
+        { name: "LE SSERAFIM - ANTIFRAGILE", type: 'youtube', ytId: "pyf8cbqyfPs", color: "#a0552c" },
+        { name: "LE SSERAFIM - CRAZY", type: 'youtube', ytId: "n6B5gQXlB-0", color: "#c4953a" },
+        { name: "ILLIT - Magnetic", type: 'youtube', ytId: "Vk5-c_v4gMU", color: "#3d5a4a" },
+        { name: "ILLIT - jellyous", type: 'youtube', ytId: "GkG60kISnfc", color: "#2c4858" },
+        { name: "ILLIT - NOT ME", type: 'youtube', ytId: "9nEp9eeGaJk", color: "#5a3d6a" },
+        { name: "YENA - Catch Catch", type: 'youtube', ytId: "NOiyDlWl534", color: "#6b4226" },
+        { name: "Hearts2Hearts - RUDE!", type: 'youtube', ytId: "A_eZnvbfzoQ", color: "#7a3f2a" },
+        { name: "ILLIT - Tick-Tack", type: 'youtube', ytId: "-nEGVrzPaiU", color: "#3a5a3a" },
+        { name: "CORTIS - GO!", type: 'youtube', ytId: "WXS-o57VJ5w", color: "#4a4a6a" },
+        { name: "The Debut: Dream Academy - Girls Don’t Like", type: 'youtube', ytId: "rJjUspLdq3I", color: "#8b3a3a" }
+    ]   // Ava's playlist (resolved from her Spotify playlist)
 };
 
 function b64urlDecode(str) {
