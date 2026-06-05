@@ -1,6 +1,42 @@
 /* ═══════════════════════════════════════════════════════════
-   KIKI — Music Room Engine
+   85 VINYLS — Music Room Engine
    ═══════════════════════════════════════════════════════════ */
+
+/* ═══ ROOM CONFIG — per-room customization, share-link driven ═══ */
+/* ── ava.85vinyls.com branch: Ava's room is the default ── */
+const DEFAULT_ROOM = {
+    name:      'Ava’s Vinyls',
+    tagline:   'Music Room',
+    title:     'Happy Birthday Ava',
+    subtitle:  'Your vinyl is ready. Enjoy, Ava.',
+    artist:    'Ava',
+    wood:      '#7a1616',
+    turntable: '#511010',
+    bgStyle:   'photo',    // 'wood' | 'pegboard' | 'photo'
+    accent:    'gold',     // 'silver' | 'gold'  (tonearm tint)
+    tracks:    []   // [{ name, src, type:'youtube'|'audio', color }] — Ava's songs go here
+};
+
+function b64urlDecode(str) {
+    return decodeURIComponent(escape(atob(str.replace(/-/g, '+').replace(/_/g, '/'))));
+}
+function b64urlEncode(str) {
+    return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function decodeRoom() {
+    try {
+        const p = new URLSearchParams(location.search).get('room');
+        if (!p) return { ...DEFAULT_ROOM };
+        const json = JSON.parse(b64urlDecode(p));
+        return { ...DEFAULT_ROOM, ...json };
+    } catch (e) {
+        console.warn('Bad room param:', e);
+        return { ...DEFAULT_ROOM };
+    }
+}
+
+const ROOM = decodeRoom();
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const audioEl  = new Audio();
@@ -208,7 +244,7 @@ function updateTbArt(track) {
             <div class="tb-sleeve-vinyl"></div>
             <div class="tb-sleeve-label">
                 <div class="tb-sleeve-title">${escapeHtml(track.name)}</div>
-                <div class="tb-sleeve-artist">Kiki</div>
+                <div class="tb-sleeve-artist">${escapeHtml(ROOM.artist)}</div>
             </div>
         </div>`;
 }
@@ -218,6 +254,7 @@ volumeSlider.addEventListener('input', () => {
     const v = Number(volumeSlider.value) / 100;
     if (musicGain)   musicGain.gain.value = v;
     if (crackleGain) crackleGain.gain.value = 0.22 * v;
+    if (ytReady) { try { ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {} }
 });
 
 /* ═══ Crackle toggle ═══ */
@@ -232,14 +269,25 @@ crackleToggle.addEventListener('click', () => {
 let rafId = null;
 
 function tick() {
-    if (audioEl.duration) {
-        const pct = (audioEl.currentTime / audioEl.duration) * 100;
+    const t = curTrack();
+    let cur = 0, dur = 0;
+    if (isYT(t) && ytReady) {
+        try { cur = ytPlayer.getCurrentTime() || 0; dur = ytPlayer.getDuration() || 0; } catch (_) {}
+    } else if (audioEl.duration) {
+        cur = audioEl.currentTime; dur = audioEl.duration;
+    }
+    if (dur) {
+        const pct = (cur / dur) * 100;
         progressFill.style.width = pct + '%';
         progressHead.style.left  = pct + '%';
-        currentTimeEl.textContent = fmt(audioEl.currentTime);
-        totalTimeEl.textContent   = fmt(audioEl.duration);
+        currentTimeEl.textContent = fmt(cur);
+        totalTimeEl.textContent   = fmt(dur);
     }
-    if (analyser && isPlaying) {
+    if (isPlaying) syncLyrics(cur);
+    if (isPlaying && isYT(t)) {
+        /* YouTube audio can't feed the analyser (cross-origin) — gentle faux meter */
+        vuBars.forEach((b, i) => b.classList.toggle('lit', Math.random() < 0.45 - i * 0.04));
+    } else if (analyser && isPlaying) {
         analyser.getByteFrequencyData(vuData);
         let sum = 0;
         for (let i = 0; i < 32; i++) sum += vuData[i];
@@ -253,9 +301,15 @@ function tick() {
 }
 
 progressTrack.addEventListener('click', e => {
-    if (!audioEl.duration) return;
     const r = progressTrack.getBoundingClientRect();
-    audioEl.currentTime = ((e.clientX - r.left) / r.width) * audioEl.duration;
+    const frac = (e.clientX - r.left) / r.width;
+    const t = curTrack();
+    if (isYT(t) && ytReady) {
+        const dur = ytPlayer.getDuration() || 0;
+        if (dur) ytPlayer.seekTo(frac * dur, true);
+    } else if (audioEl.duration) {
+        audioEl.currentTime = frac * audioEl.duration;
+    }
 });
 
 /* ═══ Render sidebar track list ═══ */
@@ -318,7 +372,7 @@ async function loadTrack(idx, autoPlay = false) {
 
     updateTbArt(track);
     tbTrack.textContent  = track.name;
-    tbArtist.textContent = 'Kiki';
+    tbArtist.textContent = ROOM.artist;
 
     record.classList.remove('settling');
     record.classList.add('loaded', 'dropping');
@@ -331,6 +385,7 @@ async function loadTrack(idx, autoPlay = false) {
     }, 850);
 
     renderTrackList();
+    if (lyricsOpen) fetchLyrics(track);
 
     if (autoPlay) {
         await sleep(900);
@@ -378,16 +433,24 @@ async function beginPlayback() {
     await sleep(450);
 
     const track = playlist[currentTrackIdx];
-    audioEl.src = track.url;
     try {
-        await audioEl.play();
-        isPlaying = true;
+        if (isYT(track)) {
+            ytStop();
+            ytLoadAndPlay(track.ytId);
+            isPlaying = true;
+        } else {
+            ytStop();
+            audioEl.src = track.url;
+            await audioEl.play();
+            isPlaying = true;
+        }
         startCrackle();
         updatePlayUI();
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(tick);
         tbTrack.textContent  = track.name;
-        tbArtist.textContent = 'Kiki';
+        tbArtist.textContent = ROOM.artist;
+        if (lyricsOpen) fetchLyrics(track);
     } catch (err) {
         console.warn('Playback failed:', err);
     }
@@ -403,6 +466,7 @@ async function stopPlayback() {
 
     isPlaying = false;
     audioEl.pause();
+    ytPause();
     stopCrackle();
     cancelAnimationFrame(rafId);
     updatePlayUI();
@@ -443,43 +507,31 @@ playBtn.addEventListener('click', () => {
     isPlaying ? stopPlayback() : beginPlayback();
 });
 
+function currentPlayheadTime() {
+    const t = curTrack();
+    if (isYT(t) && ytReady) { try { return ytPlayer.getCurrentTime() || 0; } catch (_) { return 0; } }
+    return audioEl.currentTime || 0;
+}
+
 prevBtn.addEventListener('click', () => {
     if (currentTrackIdx < 0) return;
-    if (audioEl.currentTime > 3 && isPlaying) {
-        audioEl.currentTime = 0;
+    if (isPlaying && currentPlayheadTime() > 3) {
+        const t = curTrack();
+        if (isYT(t) && ytReady) ytPlayer.seekTo(0, true);
+        else audioEl.currentTime = 0;
         return;
     }
     if (currentTrackIdx > 0) {
-        currentTrackIdx--;
-        const t = playlist[currentTrackIdx];
-        if (isPlaying) {
-            audioEl.src = t.url;
-            audioEl.play().catch(() => {});
-            tbTrack.textContent = t.name;
-            updateTbArt(t);
-            labelDisc.style.background = t.color;
-            labelDisc.style.setProperty('--label-color', t.color);
-            labelArtist.textContent = t.name;
-        }
-        renderTrackList();
+        if (isPlaying) playTrackImmediate(currentTrackIdx - 1);
+        else { currentTrackIdx--; setSourceVisual(playlist[currentTrackIdx]); renderTrackList(); }
     }
 });
 
 nextBtn.addEventListener('click', () => {
     if (currentTrackIdx < 0) return;
     if (currentTrackIdx < playlist.length - 1) {
-        currentTrackIdx++;
-        const t = playlist[currentTrackIdx];
-        if (isPlaying) {
-            audioEl.src = t.url;
-            audioEl.play().catch(() => {});
-            tbTrack.textContent = t.name;
-            updateTbArt(t);
-            labelDisc.style.background = t.color;
-            labelDisc.style.setProperty('--label-color', t.color);
-            labelArtist.textContent = t.name;
-        }
-        renderTrackList();
+        if (isPlaying) playTrackImmediate(currentTrackIdx + 1);
+        else { currentTrackIdx++; setSourceVisual(playlist[currentTrackIdx]); renderTrackList(); }
     }
 });
 
@@ -509,28 +561,8 @@ document.getElementById('btBtn')?.addEventListener('click', () => {
     document.getElementById('btBtn').classList.toggle('active');
 });
 
-/* ═══ Auto-advance when track ends ═══ */
-audioEl.addEventListener('ended', async () => {
-    if (currentTrackIdx < playlist.length - 1) {
-        currentTrackIdx++;
-        const t = playlist[currentTrackIdx];
-        labelDisc.style.background = t.color;
-        labelDisc.style.setProperty('--label-color', t.color);
-        labelArtist.textContent = t.name;
-        updateTbArt(t);
-        audioEl.src = t.url;
-        audioEl.play().catch(() => {});
-        tbTrack.textContent  = t.name;
-        tbArtist.textContent = 'Kiki';
-        renderTrackList();
-    } else {
-        await stopPlayback();
-        progressFill.style.width = '0%';
-        progressHead.style.left  = '0%';
-        currentTimeEl.textContent = '0:00';
-        totalTimeEl.textContent   = '0:00';
-    }
-});
+/* ═══ Auto-advance when track ends (audio source; YT handled via onStateChange) ═══ */
+audioEl.addEventListener('ended', () => { if (!isYT(curTrack())) handleTrackEnded(); });
 
 /* ═══ Upload ═══ */
 const QUICK_COLORS = [
@@ -638,6 +670,567 @@ document.addEventListener('keydown', e => {
     });
 })();
 
+/* ═══════════════════════════════════════════════════════════
+   YOUTUBE AUDIO SOURCE  (plays youtube-type tracks)
+   ═══════════════════════════════════════════════════════════ */
+let ytPlayer = null, ytReady = false, ytPending = null;
+
+window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player('ytHost', {
+        height: '120', width: '120',
+        playerVars: { autoplay: 0, controls: 0, disablekb: 1, playsinline: 1, rel: 0, fs: 0, modestbranding: 1 },
+        events: {
+            onReady: () => {
+                ytReady = true;
+                try { ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {}
+                if (ytPending) { const id = ytPending; ytPending = null; ytLoadAndPlay(id); }
+            },
+            onStateChange: e => { if (e.data === YT.PlayerState.ENDED) handleTrackEnded(); }
+        }
+    });
+};
+
+function ytLoadAndPlay(id) {
+    if (!ytReady) { ytPending = id; return; }
+    try {
+        ytPlayer.loadVideoById(id);
+        ytPlayer.setVolume(Number(volumeSlider.value));
+        ytPlayer.playVideo();
+    } catch (_) {}
+}
+function ytPause() { try { if (ytReady) ytPlayer.pauseVideo(); } catch (_) {} }
+function ytStop()  { try { if (ytReady) ytPlayer.stopVideo();  } catch (_) {} ytPending = null; }
+
+const curTrack = () => (currentTrackIdx >= 0 ? playlist[currentTrackIdx] : null);
+const isYT = t => t && t.type === 'youtube';
+
+/* ═══════════════════════════════════════════════════════════
+   ADD-BY-LINK  (YouTube + Spotify)
+   ═══════════════════════════════════════════════════════════ */
+const linkInput  = $('linkInput');
+const linkAddBtn = $('linkAddBtn');
+const linkStatus = $('linkStatus');
+
+function setLinkStatus(msg, ok = false, warn = false) {
+    if (!linkStatus) return;
+    linkStatus.textContent = msg || '';
+    linkStatus.dataset.state = msg ? (ok ? 'ok' : warn ? 'warn' : 'busy') : '';
+}
+
+function parseYouTube(url) {
+    const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|v\/|live\/))([\w-]{11})/);
+    if (m) return m[1];
+    if (/^[\w-]{11}$/.test(url.trim())) return url.trim();
+    return null;
+}
+function parseSpotifyTrack(url) {
+    return /open\.spotify\.com\/(?:intl-[a-z]+\/)?track\//.test(url);
+}
+
+async function fetchTimeout(url, ms = 6000) {
+    const ctrl = new AbortController();
+    const id = setTimeout(() => ctrl.abort(), ms);
+    try { return await fetch(url, { signal: ctrl.signal }); }
+    finally { clearTimeout(id); }
+}
+
+async function fetchYouTubeTitle(id) {
+    try {
+        const r = await fetchTimeout(`https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=${id}`);
+        if (r.ok) { const j = await r.json(); return j.title || null; }
+    } catch (_) {}
+    return null;
+}
+
+async function fetchSpotifyMeta(url) {
+    try {
+        const r = await fetchTimeout(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`);
+        if (r.ok) { const j = await r.json(); return { title: j.title || '', thumb: j.thumbnail_url || '' }; }
+    } catch (_) {}
+    return null;
+}
+
+/* Best-effort Spotify→YouTube match via public Piped instances (no API key). */
+const PIPED_HOSTS = [
+    'https://pipedapi.kavin.rocks',
+    'https://pipedapi.adminforge.de',
+    'https://pipedapi.leptons.xyz',
+    'https://pipedapi.reallyaweso.me'
+];
+async function resolveToYouTube(query) {
+    if (!query) return null;
+    for (const host of PIPED_HOSTS) {
+        try {
+            const r = await fetchTimeout(`${host}/search?q=${encodeURIComponent(query)}&filter=videos`, 5000);
+            if (!r.ok) continue;
+            const j = await r.json();
+            const item = (j.items || []).find(i => typeof i.url === 'string' && i.url.includes('watch?v='));
+            if (item) return item.url.split('watch?v=')[1].slice(0, 11);
+        } catch (_) {}
+    }
+    return null;
+}
+
+function addTrack(t, autoLoad = true) {
+    const wasEmpty = playlist.length === 0;
+    playlist.push({
+        id:    `${Date.now()}-${Math.random()}`,
+        name:  t.name || 'Untitled',
+        type:  t.type || 'audio',
+        ytId:  t.ytId || null,
+        url:   t.url  || null,
+        color: t.color || QUICK_COLORS[Math.floor(Math.random() * QUICK_COLORS.length)]
+    });
+    renderTrackList();
+    if (wasEmpty && autoLoad) loadTrack(0, false);
+}
+
+async function addFromLink(raw) {
+    const url = (raw || '').trim();
+    if (!url) return;
+
+    const ytId = parseYouTube(url);
+    if (ytId) {
+        setLinkStatus('Adding…');
+        const title = await fetchYouTubeTitle(ytId);
+        addTrack({ name: title || 'YouTube track', type: 'youtube', ytId });
+        setLinkStatus('Added ✓', true);
+        if (linkInput) linkInput.value = '';
+        setTimeout(() => setLinkStatus(''), 1800);
+        return;
+    }
+
+    if (parseSpotifyTrack(url)) {
+        setLinkStatus('Matching on YouTube…');
+        const meta  = await fetchSpotifyMeta(url);
+        const query = meta && meta.title ? meta.title : '';
+        const vid   = await resolveToYouTube(query);
+        if (vid) {
+            addTrack({ name: query || 'Spotify track', type: 'youtube', ytId: vid });
+            setLinkStatus('Added ✓', true);
+            if (linkInput) linkInput.value = '';
+            setTimeout(() => setLinkStatus(''), 1800);
+        } else {
+            setLinkStatus('Could not auto-match. Paste the YouTube link instead.', false, true);
+        }
+        return;
+    }
+
+    setLinkStatus('Use a YouTube or Spotify link.', false, true);
+}
+
+linkAddBtn?.addEventListener('click', () => addFromLink(linkInput?.value));
+linkInput?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addFromLink(linkInput.value); } });
+
+/* ═══ Centralized source visuals + mid-playback switching ═══ */
+function setSourceVisual(t) {
+    labelDisc.style.background = t.color;
+    labelDisc.style.setProperty('--label-color', t.color);
+    labelArtist.textContent = t.name;
+    labelAlbum.textContent  = '';
+    updateTbArt(t);
+    tbTrack.textContent  = t.name;
+    tbArtist.textContent = ROOM.artist;
+    if (lyricsOpen) fetchLyrics(t);
+}
+
+/* Switch tracks while already playing (next / prev / auto-advance) */
+function playTrackImmediate(idx) {
+    if (idx < 0 || idx >= playlist.length) return;
+    currentTrackIdx = idx;
+    const t = playlist[idx];
+    setSourceVisual(t);
+    if (isYT(t)) {
+        audioEl.pause();
+        ytLoadAndPlay(t.ytId);
+    } else {
+        ytStop();
+        audioEl.src = t.url;
+        audioEl.play().catch(() => {});
+    }
+    renderTrackList();
+}
+
+async function handleTrackEnded() {
+    if (currentTrackIdx < playlist.length - 1) {
+        playTrackImmediate(currentTrackIdx + 1);
+    } else {
+        await stopPlayback();
+        progressFill.style.width  = '0%';
+        progressHead.style.left   = '0%';
+        currentTimeEl.textContent = '0:00';
+        totalTimeEl.textContent   = '0:00';
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LYRICS  (LRCLIB — free, synced when available)
+   ═══════════════════════════════════════════════════════════ */
+const lyricsToggle = $('lyricsToggle');
+const lyricsPanel  = $('lyricsPanel');
+const lyricsClose  = $('lyricsClose');
+const lyricsBody   = $('lyricsBody');
+const lyricsTrackEl = $('lyricsTrack');
+
+let lyricsOpen   = false;
+let lyricsCache  = {};          // trackId -> { synced:[{t,line}]|null, plain:string|null }
+let activeSynced = null;        // currently rendered synced array
+let activeLyricsId = null;
+let lastActiveLine = -1;
+
+function splitArtistTitle(name) {
+    const parts = String(name).split(/\s+[-–—]\s+/);
+    if (parts.length >= 2) return { artist: parts[0].trim(), title: parts.slice(1).join(' - ').trim() };
+    return { artist: '', title: String(name).trim() };
+}
+
+/* "Clean" a noisy youtube title for better matching */
+function cleanTitle(s) {
+    return String(s)
+        .replace(/\((?:official|lyric|audio|video|4k|hd|remaster|visualizer)[^)]*\)/gi, '')
+        .replace(/\[[^\]]*\]/g, '')
+        .replace(/(?:official\s*(?:music\s*)?video|lyrics?|audio|visualizer|4k\s*remaster|remaster(?:ed)?)/gi, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+}
+
+function parseLRC(lrc) {
+    const out = [];
+    String(lrc).split('\n').forEach(raw => {
+        const text = raw.replace(/\[[0-9:.]+\]/g, '').trim();
+        const stamps = [...raw.matchAll(/\[(\d+):(\d+)(?:\.(\d+))?\]/g)];
+        stamps.forEach(m => {
+            const t = (+m[1]) * 60 + (+m[2]) + (m[3] ? (+('0.' + m[3])) : 0);
+            out.push({ t, line: text });
+        });
+    });
+    out.sort((a, b) => a.t - b.t);
+    return out;
+}
+
+async function lrclibSearch(query) {
+    try {
+        const r = await fetchTimeout(`https://lrclib.net/api/search?q=${encodeURIComponent(query)}`, 12000);
+        if (!r.ok) return null;
+        const arr = await r.json();
+        if (!Array.isArray(arr) || !arr.length) return null;
+        return arr.find(x => x.syncedLyrics) || arr.find(x => x.plainLyrics) || arr[0];
+    } catch (_) { return null; }
+}
+
+async function fetchLyrics(track) {
+    if (!track) return;
+    if (lyricsTrackEl) lyricsTrackEl.textContent = track.name;
+    if (lyricsCache[track.id]) { renderLyrics(track.id); return; }
+
+    if (lyricsOpen) lyricsBody.innerHTML = `<div class="lyrics-empty">Looking for lyrics…</div>`;
+
+    const { artist, title } = splitArtistTitle(track.name);
+    const ct = cleanTitle(title);
+    let hit = await lrclibSearch(`${artist} ${ct}`.trim());
+    if (!hit) hit = await lrclibSearch(ct);
+    if (!hit) hit = await lrclibSearch(cleanTitle(track.name));
+
+    lyricsCache[track.id] = {
+        synced: hit && hit.syncedLyrics ? parseLRC(hit.syncedLyrics) : null,
+        plain:  hit && hit.plainLyrics  ? hit.plainLyrics : null
+    };
+    renderLyrics(track.id);
+}
+
+function renderLyrics(trackId) {
+    activeLyricsId = trackId;
+    lastActiveLine = -1;
+    const data = lyricsCache[trackId];
+    if (!lyricsBody) return;
+    if (!data || (!data.synced && !data.plain)) {
+        activeSynced = null;
+        lyricsBody.innerHTML = `<div class="lyrics-empty">No lyrics found for this track.<br><span>Lyrics come from LRCLIB and don’t cover every song.</span></div>`;
+        return;
+    }
+    if (data.synced && data.synced.length) {
+        activeSynced = data.synced;
+        lyricsBody.innerHTML = data.synced
+            .map((l, i) => `<div class="lyric-line" data-i="${i}">${l.line ? escapeHtml(l.line) : '♪'}</div>`)
+            .join('');
+    } else {
+        activeSynced = null;
+        lyricsBody.innerHTML = `<div class="lyrics-plain">${
+            data.plain.split('\n').map(l => l.trim() ? escapeHtml(l) : '<br>').join('<br>')
+        }</div>`;
+    }
+}
+
+function syncLyrics(time) {
+    if (!lyricsOpen || !activeSynced || activeLyricsId !== (curTrack() && curTrack().id)) return;
+    let idx = -1;
+    for (let i = 0; i < activeSynced.length; i++) {
+        if (activeSynced[i].t <= time + 0.15) idx = i; else break;
+    }
+    if (idx === lastActiveLine) return;
+    lastActiveLine = idx;
+    const lines = lyricsBody.querySelectorAll('.lyric-line');
+    lines.forEach((el, i) => el.classList.toggle('active', i === idx));
+    const activeEl = lines[idx];
+    if (activeEl) activeEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function openLyrics() {
+    lyricsOpen = true;
+    lyricsPanel.classList.add('open');
+    lyricsToggle.dataset.on = 'true';
+    const t = curTrack();
+    if (t) fetchLyrics(t); else lyricsBody.innerHTML = `<div class="lyrics-empty">Press play to load lyrics.</div>`;
+}
+function closeLyrics() {
+    lyricsOpen = false;
+    lyricsPanel.classList.remove('open');
+    lyricsToggle.dataset.on = 'false';
+}
+lyricsToggle?.addEventListener('click', () => lyricsOpen ? closeLyrics() : openLyrics());
+lyricsClose?.addEventListener('click', closeLyrics);
+
+/* ═══════════════════════════════════════════════════════════
+   ROOM THEMING + CUSTOMIZATION
+   ═══════════════════════════════════════════════════════════ */
+/* Natural wood grain via SVG turbulence (procedural rosewood):
+   organic, wavy vertical grain with near-black veins over a red field. */
+function buildWood(base) {
+    const dark  = darken(base, 32);
+    const light = lighten(base, 20);
+    const svg =
+        `<svg xmlns='http://www.w3.org/2000/svg' width='760' height='620' preserveAspectRatio='none'>` +
+        `<defs>` +
+            `<linearGradient id='b' x1='0' y1='0' x2='1' y2='0'>` +
+                `<stop offset='0' stop-color='${dark}'/>` +
+                `<stop offset='0.22' stop-color='${light}'/>` +
+                `<stop offset='0.5' stop-color='${base}'/>` +
+                `<stop offset='0.78' stop-color='${light}'/>` +
+                `<stop offset='1' stop-color='${dark}'/>` +
+            `</linearGradient>` +
+            /* stretched fractal noise -> vertical organic streaks; 5 octaves = detail */
+            `<filter id='g' x='-2%' y='-2%' width='104%' height='104%'>` +
+                `<feTurbulence type='fractalNoise' baseFrequency='0.055 0.004' numOctaves='6' seed='17' result='n'/>` +
+                `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.7 0.7 0.7 0 -0.2'/>` +
+                `<feComponentTransfer><feFuncA type='gamma' amplitude='1' exponent='3' offset='0'/></feComponentTransfer>` +
+            `</filter>` +
+        `</defs>` +
+        `<rect width='760' height='620' fill='url(#b)'/>` +
+        `<rect width='760' height='620' filter='url(#g)' fill='#1a0303'/>` +
+        `</svg>`;
+    const uri = 'data:image/svg+xml,' + encodeURIComponent(svg);
+    return `linear-gradient(180deg, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.06) 30%, rgba(0,0,0,0.30) 100%), url("${uri}") center / cover no-repeat`;
+}
+
+/* Perforated pegboard panel (Technics-style wall) built from a base color */
+function buildPegboard(base) {
+    const hole     = 'radial-gradient(circle at 50% 42%, rgba(0,0,0,0.62) 1.7px, rgba(0,0,0,0.18) 2.3px, transparent 3px) 0 0 / 26px 26px';
+    const hilite   = 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.05) 1.4px, transparent 2px) 0 0 / 26px 26px';
+    const lighting = `radial-gradient(ellipse at 50% 32%, ${lighten(base,34)} 0%, ${base} 46%, ${darken(base,30)} 100%)`;
+    return `${hilite}, ${hole}, ${lighting}, ${darken(base,12)}`;
+}
+
+/* Muted matte-metal body finish (soft, low sheen — no brushing lines) */
+function buildTurntableFace(t) {
+    const sheen = 'radial-gradient(140% 95% at 50% 24%, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.0) 46%)';
+    const body  = `linear-gradient(180deg, ${lighten(t,5)} 0%, ${t} 48%, ${darken(t,9)} 100%)`;
+    return `${sheen}, ${body}`;
+}
+
+/* Photographic wood background with a focused light pooled on the turntable:
+   a soft glow at center, darkening to shadow at the corners (spotlight vignette). */
+function buildWoodPhoto() {
+    const spotlight = 'radial-gradient(ellipse 64% 72% at 50% 43%, rgba(255,236,214,0.10) 0%, rgba(255,236,214,0.04) 22%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.46) 74%, rgba(0,0,0,0.74) 100%)';
+    const depth     = 'linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.0) 32%, rgba(0,0,0,0.20) 100%)';
+    return `${spotlight}, ${depth}, url("wood-red.jpg") center / cover no-repeat`;
+}
+
+function applyTheme(wood, turntable, bgStyle, accent) {
+    const stage = document.querySelector('.hero-stage');
+    if (stage) {
+        stage.style.background =
+            bgStyle === 'photo'    ? buildWoodPhoto() :
+            bgStyle === 'pegboard' ? buildPegboard(wood) :
+                                     buildWood(wood);
+        stage.classList.toggle('lit', bgStyle === 'photo');  // spotlight overlay
+    }
+    const face = document.querySelector('.cabinet-face');
+    if (face) face.style.background = buildTurntableFace(turntable);
+    /* Match the top/bottom edge trims to the body so the whole unit is one color */
+    const topTrim = document.querySelector('.cabinet-top-trim');
+    if (topTrim) topTrim.style.background = `linear-gradient(180deg, ${lighten(turntable, 10)} 0%, ${turntable} 100%)`;
+    const botTrim = document.querySelector('.cabinet-bottom-trim');
+    if (botTrim) botTrim.style.background = `linear-gradient(180deg, ${darken(turntable, 6)} 0%, ${darken(turntable, 13)} 100%)`;
+    document.body.classList.toggle('accent-gold', accent === 'gold');
+    applyArmAccent(accent);
+}
+
+/* Recolor ONLY the arm tube (the #armGrad cylinder gradient). Everything else
+   on the tonearm — headshell, cartridge, pivot, rests — stays black plastic. */
+const ARM_BRASS = ['#e0c074', '#c19a3e', '#7c5d22', '#a9842d', '#cfa848', '#f0d588'];
+const ARM_STEEL = ['#141414', '#0d0d0d', '#070707', '#111111', '#1d1d1d', '#2a2a2a'];
+function applyArmAccent(accent) {
+    const grad = document.getElementById('armGrad');
+    if (!grad) return;
+    const stops = grad.querySelectorAll('stop');
+    const set = accent === 'gold' ? ARM_BRASS : ARM_STEEL;
+    stops.forEach((s, i) => { if (set[i]) s.setAttribute('stop-color', set[i]); });
+}
+
+/* Apply text + colors (safe to call repeatedly, e.g. live preview) */
+function applyChrome(r) {
+    document.title = r.name || '85 Vinyls';
+    const setText = (sel, val) => { const el = document.querySelector(sel); if (el && val != null) el.textContent = val; };
+    setText('.brand-name',   r.name);
+    setText('.brand-tagline', r.tagline);
+    setText('#greetingTime', r.title);
+    setText('.greeting-sub', r.subtitle);
+    if (tbArtist && currentTrackIdx < 0) tbArtist.textContent = r.artist;
+    applyTheme(
+        r.wood      || DEFAULT_ROOM.wood,
+        r.turntable || DEFAULT_ROOM.turntable,
+        r.bgStyle   || DEFAULT_ROOM.bgStyle,
+        r.accent    || DEFAULT_ROOM.accent
+    );
+}
+
+/* Load link-based tracks from a shared room (call once) */
+function loadRoomTracks(r) {
+    if (!Array.isArray(r.tracks) || !r.tracks.length) return;
+    r.tracks.forEach(t => playlist.push({
+        id:    `${Date.now()}-${Math.random()}`,
+        name:  t.name || 'Untitled',
+        type:  t.type || 'audio',
+        ytId:  t.ytId || null,
+        url:   t.src  || t.url || null,
+        color: t.color || QUICK_COLORS[Math.floor(Math.random() * QUICK_COLORS.length)]
+    }));
+    renderTrackList();
+    loadTrack(0, false);
+}
+
+/* Tracks that can travel in a share link (youtube ids + http audio urls; not blob: uploads) */
+function shareableTracks() {
+    return playlist
+        .filter(t => t.type === 'youtube' || (t.url && /^https?:/i.test(t.url)))
+        .map(t => ({ name: t.name, type: t.type || 'audio', ytId: t.ytId || undefined, src: t.url || undefined, color: t.color }));
+}
+
+/* ═══ Customize / Create Room modal ═══ */
+(() => {
+    const openBtn  = $('customizeBtn');
+    const modal    = $('roomModal');
+    if (!openBtn || !modal) return;
+    const closeBtn = $('roomModalClose');
+    const f = {
+        title:     $('cfgTitle'),
+        subtitle:  $('cfgSubtitle'),
+        name:      $('cfgName'),
+        artist:    $('cfgArtist'),
+        wood:      $('cfgWood'),
+        turntable: $('cfgTurntable'),
+    };
+    const shareInput = $('cfgShareLink');
+    const copyBtn    = $('cfgCopyBtn');
+
+    /* Segmented (non-input) selections */
+    const seg = { bgStyle: ROOM.bgStyle, accent: ROOM.accent };
+
+    /* One-click looks */
+    const PRESETS = {
+        walnut:   { wood: '#3c2610', turntable: '#0d0d0d', bgStyle: 'wood', accent: 'silver' },
+        redwood:  { wood: '#6a1414', turntable: '#1a0c0c', bgStyle: 'wood', accent: 'gold'   },
+        technics: { wood: '#7a1616', turntable: '#511010', bgStyle: 'photo', accent: 'gold'  },
+        midnight: { wood: '#1f2433', turntable: '#0c0f18', bgStyle: 'wood', accent: 'silver' }
+    };
+
+    function syncSegUI() {
+        document.querySelectorAll('.seg-opt').forEach(el => {
+            el.classList.toggle('active', seg[el.dataset.group] === el.dataset.value);
+        });
+    }
+
+    function collect() {
+        return {
+            name:      (f.name.value.trim())     || DEFAULT_ROOM.name,
+            tagline:   ROOM.tagline || DEFAULT_ROOM.tagline,
+            title:     (f.title.value.trim())    || DEFAULT_ROOM.title,
+            subtitle:  (f.subtitle.value.trim()) || DEFAULT_ROOM.subtitle,
+            artist:    (f.artist.value.trim())   || DEFAULT_ROOM.artist,
+            wood:      f.wood.value,
+            turntable: f.turntable.value,
+            bgStyle:   seg.bgStyle,
+            accent:    seg.accent,
+            tracks:    shareableTracks()
+        };
+    }
+
+    function applyPreset(name) {
+        const p = PRESETS[name];
+        if (!p) return;
+        f.wood.value      = p.wood;
+        f.turntable.value = p.turntable;
+        seg.bgStyle       = p.bgStyle;
+        seg.accent        = p.accent;
+        syncSegUI();
+        refresh();
+    }
+    function buildLink(cfg) {
+        return `${location.origin}${location.pathname}?room=${b64urlEncode(JSON.stringify(cfg))}`;
+    }
+    function refresh() {
+        const cfg = collect();
+        applyChrome(cfg);                 // live preview
+        shareInput.value = buildLink(cfg);
+    }
+
+    function open() {
+        f.title.value     = ROOM.title;
+        f.subtitle.value  = ROOM.subtitle;
+        f.name.value      = ROOM.name;
+        f.artist.value    = ROOM.artist;
+        f.wood.value      = ROOM.wood;
+        f.turntable.value = ROOM.turntable;
+        seg.bgStyle       = ROOM.bgStyle || DEFAULT_ROOM.bgStyle;
+        seg.accent        = ROOM.accent  || DEFAULT_ROOM.accent;
+        syncSegUI();
+        refresh();
+        modal.classList.remove('hidden');
+    }
+    function close() {
+        modal.classList.add('hidden');
+        applyChrome(ROOM);                // revert preview to the live room
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn?.addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    Object.values(f).forEach(el => {
+        el.addEventListener('input', refresh);
+        el.addEventListener('change', refresh);
+    });
+    document.querySelectorAll('.seg-opt').forEach(el => {
+        el.addEventListener('click', () => { seg[el.dataset.group] = el.dataset.value; syncSegUI(); refresh(); });
+    });
+    document.querySelectorAll('.preset-chip').forEach(el => {
+        el.addEventListener('click', () => applyPreset(el.dataset.preset));
+    });
+    copyBtn?.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(shareInput.value);
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => copyBtn.textContent = 'Copy share link', 1600);
+        } catch {
+            shareInput.select();
+            document.execCommand('copy');
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => copyBtn.textContent = 'Copy share link', 1600);
+        }
+    });
+})();
+
 /* ═══ Init ═══ */
+applyChrome(ROOM);
+loadRoomTracks(ROOM);
 renderTrackList();
 updatePlayUI();
