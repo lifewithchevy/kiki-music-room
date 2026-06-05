@@ -324,7 +324,7 @@ function renderTrackList(filter = '') {
     if (list.length === 0) {
         trackListEl.innerHTML = `<div class="track-empty">${
             playlist.length === 0
-                ? 'Upload songs to begin'
+                ? 'Add a song to begin'
                 : 'No results'
         }</div>`;
         return;
