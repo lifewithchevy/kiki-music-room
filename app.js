@@ -632,6 +632,8 @@ const exitImmersiveBtn = $('exitImmersiveBtn');
 function enterImmersive() {
     document.body.classList.add('immersive');
     document.body.classList.remove('cursor-idle'); // show cursor, 3s timer restarts via mousemove
+    const wrap = document.querySelector('.cabinet-wrap');
+    if (wrap) wrap.style.zoom = '';                 // let immersive CSS sizing take over
     const el = document.documentElement;
     const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
     if (req) req.call(el).catch(() => {});
@@ -640,6 +642,7 @@ function exitImmersive() {
     document.body.classList.remove('immersive');
     const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
     if (exit && document.fullscreenElement) exit.call(document).catch(() => {});
+    setTimeout(fitCabinet, 60);                     // re-fit to the stage
 }
 
 immersiveBtn.addEventListener('click', enterImmersive);
@@ -647,10 +650,10 @@ exitImmersiveBtn.addEventListener('click', exitImmersive);
 
 /* Sync immersive class if user exits fullscreen via browser (Esc, F11, etc.) */
 document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) document.body.classList.remove('immersive');
+    if (!document.fullscreenElement) { document.body.classList.remove('immersive'); scheduleFit(); }
 });
 document.addEventListener('webkitfullscreenchange', () => {
-    if (!document.webkitFullscreenElement) document.body.classList.remove('immersive');
+    if (!document.webkitFullscreenElement) { document.body.classList.remove('immersive'); scheduleFit(); }
 });
 
 document.addEventListener('keydown', e => {
@@ -1261,8 +1264,33 @@ function shareableTracks() {
     });
 })();
 
+/* ═══ Fit the turntable to the stage (never clip top/bottom on short viewports) ═══ */
+function fitCabinet() {
+    const wrap  = document.querySelector('.cabinet-wrap');
+    const stage = document.querySelector('.hero-stage');
+    if (!wrap || !stage) return;
+    if (document.body.classList.contains('immersive')) { wrap.style.zoom = ''; return; }
+    wrap.style.zoom = '1';                       // measure natural size
+    const cw = wrap.offsetWidth, ch = wrap.offsetHeight;
+    if (!cw || !ch) return;
+    const availW = stage.clientWidth  - 36;
+    const availH = stage.clientHeight - 24;
+    const scale = Math.min(1, availW / cw, availH / ch);
+    wrap.style.zoom = scale;
+}
+
+let _fitRAF = null;
+function scheduleFit() {
+    cancelAnimationFrame(_fitRAF);
+    _fitRAF = requestAnimationFrame(fitCabinet);
+}
+window.addEventListener('resize', scheduleFit);
+window.addEventListener('load', scheduleFit);
+
 /* ═══ Init ═══ */
 applyChrome(ROOM);
 loadRoomTracks(ROOM);
 renderTrackList();
 updatePlayUI();
+fitCabinet();
+setTimeout(fitCabinet, 60);   // re-fit after fonts/layout settle

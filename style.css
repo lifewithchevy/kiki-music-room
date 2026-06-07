@@ -56,12 +56,13 @@ input  { font-family: inherit; }
    ═══════════════════════════════════════════════════════════ */
 .salon {
     display: grid;
-    grid-template-columns: var(--sidebar-w) 1fr;
-    grid-template-rows: 1fr var(--transport-h);
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) var(--transport-h);
     grid-template-areas:
         "sidebar main"
         "transport transport";
     height: 100vh;
+    height: 100dvh;
     position: relative;
 }
 
