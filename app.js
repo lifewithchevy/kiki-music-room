@@ -45,7 +45,8 @@ const DEFAULT_ROOM = {
         { name: "Hearts2Hearts - RUDE!", type: 'youtube', ytId: "A_eZnvbfzoQ", color: "#7a3f2a" },
         { name: "ILLIT - Tick-Tack", type: 'youtube', ytId: "-nEGVrzPaiU", color: "#3a5a3a" },
         { name: "CORTIS - GO!", type: 'youtube', ytId: "WXS-o57VJ5w", color: "#4a4a6a" },
-        { name: "The Debut: Dream Academy - Girls Don’t Like", type: 'youtube', ytId: "rJjUspLdq3I", color: "#8b3a3a" }
+        { name: "The Debut: Dream Academy - Girls Don’t Like", type: 'youtube', ytId: "rJjUspLdq3I", color: "#8b3a3a" },
+        { name: "LE SSERAFIM - BOOMPALA", type: 'youtube', ytId: "GvtNBLn6_Ik", color: "#a0552c" }
     ]   // Ava's playlist (resolved from her Spotify playlist)
 };
 
