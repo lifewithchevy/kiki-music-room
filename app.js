@@ -1078,12 +1078,42 @@ function buildTurntableFace(t) {
     return `${sheen}, ${body}`;
 }
 
-/* Photographic wood background with a focused light pooled on the turntable:
-   a soft glow at center, darkening to shadow at the corners (spotlight vignette). */
+/* High-res procedural rosewood (resolution-independent — never pixelates).
+   Layers: left/right sheen + broad tonal bands + fine near-black vertical veins.
+   The focused spotlight is added on top by the .hero-stage.lit overlay. */
 function buildWoodPhoto() {
-    const spotlight = 'radial-gradient(ellipse 64% 72% at 50% 43%, rgba(255,236,214,0.10) 0%, rgba(255,236,214,0.04) 22%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.46) 74%, rgba(0,0,0,0.74) 100%)';
-    const depth     = 'linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.0) 32%, rgba(0,0,0,0.20) 100%)';
-    return `${spotlight}, ${depth}, url("wood-red.jpg") center / cover no-repeat`;
+    const base  = ROOM.wood || '#7a1616';
+    const dark  = darken(base, 30);
+    const light = lighten(base, 22);
+    const W = 1400, H = 1000;
+    const svg =
+        `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' preserveAspectRatio='none'>` +
+        `<defs>` +
+            `<linearGradient id='b' x1='0' y1='0' x2='1' y2='0'>` +
+                `<stop offset='0' stop-color='${dark}'/>` +
+                `<stop offset='0.18' stop-color='${light}'/>` +
+                `<stop offset='0.5' stop-color='${base}'/>` +
+                `<stop offset='0.82' stop-color='${light}'/>` +
+                `<stop offset='1' stop-color='${dark}'/>` +
+            `</linearGradient>` +
+            /* broad, slow tonal bands (cathedral grain) */
+            `<filter id='broad' x='0' y='0' width='100%' height='100%'>` +
+                `<feTurbulence type='fractalNoise' baseFrequency='0.006 0.0016' numOctaves='3' seed='5' result='n'/>` +
+                `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.9 0.9 0.9 0 -0.34'/>` +
+            `</filter>` +
+            /* fine vertical grain -> near-black veins */
+            `<filter id='fine' x='0' y='0' width='100%' height='100%'>` +
+                `<feTurbulence type='fractalNoise' baseFrequency='0.09 0.006' numOctaves='6' seed='12' result='n'/>` +
+                `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.78 0.78 0.78 0 -0.28'/>` +
+                `<feComponentTransfer><feFuncA type='gamma' amplitude='1' exponent='2.6' offset='0'/></feComponentTransfer>` +
+            `</filter>` +
+        `</defs>` +
+        `<rect width='${W}' height='${H}' fill='url(#b)'/>` +
+        `<rect width='${W}' height='${H}' filter='url(#broad)' fill='${darken(base,32)}'/>` +
+        `<rect width='${W}' height='${H}' filter='url(#fine)' fill='#180303'/>` +
+        `</svg>`;
+    const uri = 'data:image/svg+xml,' + encodeURIComponent(svg);
+    return `linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.0) 30%, rgba(0,0,0,0.16) 100%), url("${uri}") center / cover no-repeat`;
 }
 
 function applyTheme(wood, turntable, bgStyle, accent) {
