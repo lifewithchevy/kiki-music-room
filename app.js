@@ -8,7 +8,7 @@ const DEFAULT_ROOM = {
     name:      'Ava’s Vinyls',
     tagline:   'Music Room',
     title:     'Happy Birthday Ava',
-    subtitle:  'Your vinyl is ready. Enjoy, Ava.',
+    subtitle:  '',
     artist:    'Ava',
     wood:      '#7a1616',
     turntable: '#511010',
@@ -220,6 +220,13 @@ const powerBtn      = $('powerBtn');
 const labelDisc     = $('labelDisc');
 const labelArtist   = $('labelArtist');
 const labelAlbum    = $('labelAlbum');
+
+/* Split "Artist - Title" so the artist sits above the spindle, fully readable */
+function setVinylLabel(name) {
+    const parts = String(name).split(' - ');
+    labelArtist.textContent = parts[0] || name;
+    labelAlbum.textContent  = parts.slice(1).join(' - ');
+}
 const tbArt         = $('tbArt');
 const tbTrack       = $('tbTrack');
 const tbArtist      = $('tbArtist');
@@ -400,8 +407,7 @@ async function loadTrack(idx, autoPlay = false) {
 
     labelDisc.style.background = track.color;
     labelDisc.style.setProperty('--label-color', track.color);
-    labelArtist.textContent = track.name;
-    labelAlbum.textContent  = '';
+    setVinylLabel(track.name);
 
     updateTbArt(track);
     tbTrack.textContent  = track.name;
@@ -862,8 +868,7 @@ linkInput?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.prevent
 function setSourceVisual(t) {
     labelDisc.style.background = t.color;
     labelDisc.style.setProperty('--label-color', t.color);
-    labelArtist.textContent = t.name;
-    labelAlbum.textContent  = '';
+    setVinylLabel(t.name);
     updateTbArt(t);
     tbTrack.textContent  = t.name;
     tbArtist.textContent = ROOM.artist;
