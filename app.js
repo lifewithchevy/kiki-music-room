@@ -999,7 +999,7 @@ async function fetchLyrics(track, { prefetch = false } = {}) {
 
     lyricsCache[track.id] = {
         synced: hit && hit.syncedLyrics ? parseLRC(hit.syncedLyrics) : null,
-        plain:  hit && hit.plainLyrics  ? hit.plainLyrics : null,
+        plain:  hit && hit.plainLyrics  ? hit.plainLyrics.replace(/\[[0-9:.]+\]/g, '').trim() : null,
         duration: hit && hit.duration ? hit.duration : null,
         durationChecked: false
     };
