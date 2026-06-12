@@ -323,6 +323,7 @@ function tick() {
         currentTimeEl.textContent = fmt(cur);
         totalTimeEl.textContent   = fmt(dur);
     }
+    if (dur) maybeFallbackToPlain();
     if (isPlaying) syncLyrics(cur);
     if (isPlaying && isYT(t)) {
         /* YouTube audio can't feed the analyser (cross-origin) — gentle faux meter */
@@ -981,9 +982,47 @@ async function fetchLyrics(track) {
 
     lyricsCache[track.id] = {
         synced: hit && hit.syncedLyrics ? parseLRC(hit.syncedLyrics) : null,
-        plain:  hit && hit.plainLyrics  ? hit.plainLyrics : null
+        plain:  hit && hit.plainLyrics  ? hit.plainLyrics : null,
+        duration: hit && hit.duration ? hit.duration : null,
+        durationChecked: false
     };
     renderLyrics(track.id);
+}
+
+/* Current media's duration in seconds (0 if not yet known) */
+function getCurrentMediaDuration() {
+    const t = curTrack();
+    if (!t) return 0;
+    if (isYT(t) && ytReady) {
+        try { return ytPlayer.getDuration() || 0; } catch (_) { return 0; }
+    }
+    return audioEl.duration || 0;
+}
+
+/* If the playing video's length doesn't roughly match LRCLIB's reference
+   track, the synced timestamps won't line up (different cut/version) —
+   fall back to plain scrollable lyrics instead of a false-confidence sync. */
+function maybeFallbackToPlain() {
+    const t = curTrack();
+    if (!t) return;
+    const data = lyricsCache[t.id];
+    if (!data || data.durationChecked || !data.synced) return;
+    const mediaDur = getCurrentMediaDuration();
+    if (!mediaDur || !data.duration) return;
+    data.durationChecked = true;
+    const diff = Math.abs(mediaDur - data.duration);
+    const threshold = Math.max(5, data.duration * 0.04);
+    if (diff <= threshold) return;
+
+    const plainText = data.plain || data.synced.map(l => l.line).filter(Boolean).join('\n');
+    data.synced = null;
+    data.plain = plainText;
+    if (activeLyricsId === t.id) {
+        activeSynced = null;
+        lyricsBody.innerHTML = `<div class="lyrics-plain">${
+            plainText.split('\n').map(l => l.trim() ? escapeHtml(l) : '<br>').join('<br>')
+        }</div>`;
+    }
 }
 
 function renderLyrics(trackId) {
@@ -1007,6 +1046,7 @@ function renderLyrics(trackId) {
             data.plain.split('\n').map(l => l.trim() ? escapeHtml(l) : '<br>').join('<br>')
         }</div>`;
     }
+    maybeFallbackToPlain();
 }
 
 function syncLyrics(time) {
