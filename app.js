@@ -426,6 +426,7 @@ async function loadTrack(idx, autoPlay = false) {
 
     renderTrackList();
     fetchLyrics(track);
+    prefetchNextLyrics(idx);
 
     if (autoPlay) {
         await sleep(900);
@@ -491,6 +492,7 @@ async function beginPlayback() {
         tbTrack.textContent  = track.name;
         tbArtist.textContent = ROOM.artist;
         fetchLyrics(track);
+        prefetchNextLyrics(currentTrackIdx);
     } catch (err) {
         console.warn('Playback failed:', err);
     }
@@ -964,12 +966,12 @@ async function lrclibSearch(query) {
     } catch (_) { return null; }
 }
 
-async function fetchLyrics(track) {
+async function fetchLyrics(track, { prefetch = false } = {}) {
     if (!track) return;
-    if (lyricsTrackEl) lyricsTrackEl.textContent = track.name;
-    if (lyricsCache[track.id]) { renderLyrics(track.id); return; }
+    if (!prefetch && lyricsTrackEl) lyricsTrackEl.textContent = track.name;
+    if (lyricsCache[track.id]) { if (!prefetch) renderLyrics(track.id); return; }
 
-    if (lyricsOpen) lyricsBody.innerHTML = `<div class="lyrics-empty">Looking for lyrics…</div>`;
+    if (!prefetch && lyricsOpen) lyricsBody.innerHTML = `<div class="lyrics-empty">Looking for lyrics…</div>`;
 
     const { artist, title } = splitArtistTitle(track.name);
     const ct = cleanTitle(title);
@@ -986,7 +988,13 @@ async function fetchLyrics(track) {
         duration: hit && hit.duration ? hit.duration : null,
         durationChecked: false
     };
-    renderLyrics(track.id);
+    if (!prefetch) renderLyrics(track.id);
+}
+
+/* Quietly warm the lyrics cache for the track after this one */
+function prefetchNextLyrics(idx) {
+    const next = playlist[idx + 1];
+    if (next) fetchLyrics(next, { prefetch: true });
 }
 
 /* Current media's duration in seconds (0 if not yet known) */
