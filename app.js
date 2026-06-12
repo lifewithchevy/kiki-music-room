@@ -15,6 +15,8 @@ const DEFAULT_ROOM = {
     bgStyle:   'photo',    // 'wood' | 'pegboard' | 'photo'
     accent:    'gold',     // 'silver' | 'gold'  (tonearm tint)
     tracks: [
+        { name: "KATSEYE - Gnarly", type: 'youtube', ytId: "R2-yomhYAj4", color: "#3a5a3a" },
+        { name: "LE SSERAFIM - SPAGHETTI (Member ver.)", type: 'youtube', ytId: "8Cp-8gZ4mnE", color: "#4a4a6a" },
         { name: "KATSEYE - PINKY UP", type: 'youtube', ytId: "7F1ET2XHQfk", color: "#8b3a3a" },
         { name: "KATSEYE - Debut", type: 'youtube', ytId: "bYg6aMDQ_TA", color: "#a0552c" },
         { name: "KATSEYE - Touch", type: 'youtube', ytId: "l9CZykYZkOQ", color: "#c4953a" },
@@ -23,7 +25,6 @@ const DEFAULT_ROOM = {
         { name: "KATSEYE - Tonight I Might", type: 'youtube', ytId: "6oqywcXsQik", color: "#5a3d6a" },
         { name: "KATSEYE - Touch (ft. YEONJUN of TOMORROW X TOGETHER)", type: 'youtube', ytId: "86cojHkoefk", color: "#6b4226" },
         { name: "KATSEYE - Flame (from the Netflix Series \"Jentry Chau vs the Underworld\")", type: 'youtube', ytId: "e8tScmvnpL8", color: "#7a3f2a" },
-        { name: "KATSEYE - Gnarly", type: 'youtube', ytId: "R2-yomhYAj4", color: "#3a5a3a" },
         { name: "KATSEYE - Gnarly - Ice Spice Remix", type: 'youtube', ytId: "lNzLuzmx5aY", color: "#4a4a6a" },
         { name: "KATSEYE - Gabriela", type: 'youtube', ytId: "CjnB56tSCQI", color: "#8b3a3a" },
         { name: "KATSEYE - Gameboy", type: 'youtube', ytId: "-bC4iak3kxg", color: "#a0552c" },
@@ -34,7 +35,6 @@ const DEFAULT_ROOM = {
         { name: "YEONJUN - Let Me Tell You (feat. Daniela of KATSEYE)", type: 'youtube', ytId: "2xbTnB6we0Q", color: "#6b4226" },
         { name: "KATSEYE - M.I.A - VALORANT Game Changers Version", type: 'youtube', ytId: "mX-dgjFS6eY", color: "#7a3f2a" },
         { name: "KATSEYE - Internet Girl", type: 'youtube', ytId: "5q9EjSUovc4", color: "#3a5a3a" },
-        { name: "LE SSERAFIM - SPAGHETTI (Member ver.)", type: 'youtube', ytId: "8Cp-8gZ4mnE", color: "#4a4a6a" },
         { name: "ILLIT - NOT CUTE ANYMORE", type: 'youtube', ytId: "x_RYZsOfpKY", color: "#8b3a3a" },
         { name: "LE SSERAFIM - ANTIFRAGILE", type: 'youtube', ytId: "pyf8cbqyfPs", color: "#a0552c" },
         { name: "LE SSERAFIM - CRAZY", type: 'youtube', ytId: "n6B5gQXlB-0", color: "#c4953a" },
