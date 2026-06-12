@@ -56,18 +56,22 @@ input  { font-family: inherit; }
    ═══════════════════════════════════════════════════════════ */
 .salon {
     display: grid;
-    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr) 0px;
     grid-template-rows: minmax(0, 1fr) var(--transport-h);
     grid-template-areas:
-        "sidebar main"
-        "transport transport";
+        "sidebar main lyrics"
+        "transport transport transport";
     height: 100vh;
     height: 100dvh;
     position: relative;
+    transition: grid-template-columns 0.4s cubic-bezier(0.32,0.72,0,1);
+}
+.salon.lyrics-open {
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr) 340px;
 }
 
 .sidebar       { grid-area: sidebar; }
-.main          { grid-area: main; overflow: hidden; position: relative; z-index: 1; display: flex; flex-direction: column; }
+.main          { grid-area: main; overflow: hidden; position: relative; z-index: 1; display: flex; flex-direction: column; min-width: 0; }
 .transport-bar { grid-area: transport; z-index: 50; }
 
 /* ═══════════════════════════════════════════════════════════
@@ -2049,18 +2053,20 @@ input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
 
 /* ═══ Lyrics panel (right drawer) ═══ */
 .lyrics-panel {
-    position: fixed; top: 0; right: 0;
-    width: 360px; max-width: 86vw; height: 100vh;
+    grid-area: lyrics;
+    height: 100%;
+    overflow: hidden;
+    min-width: 0;
     background: linear-gradient(180deg, rgba(16,16,16,0.97), rgba(6,6,6,0.98));
     border-left: 1px solid rgba(255,255,255,0.08);
     box-shadow: -20px 0 60px rgba(0,0,0,0.6);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    z-index: 600;
-    transform: translateX(102%);
-    transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+    z-index: 50;
+}
+.lyrics-panel-inner {
+    width: 340px; height: 100%;
     display: flex; flex-direction: column;
 }
-.lyrics-panel.open { transform: translateX(0); }
 
 .lyrics-head {
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -2115,6 +2121,28 @@ input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
     color: var(--text-mid); text-align: center; margin-top: 40px;
 }
 .lyrics-empty span { color: var(--text-dim); font-size: 11px; }
+
+/* Tight viewports (e.g. iPad landscape): shrink the cabinet a touch so
+   the turntable stays fully visible alongside the lyrics panel. */
+@media (min-width: 1025px) and (max-width: 1400px) {
+    .salon.lyrics-open .cabinet-wrap { zoom: 0.82; }
+}
+
+/* Narrower than that (iPad portrait, phones): no room for a 3rd column —
+   lyrics slide in as an overlay above the turntable instead. */
+@media (max-width: 1024px) {
+    .salon.lyrics-open {
+        grid-template-columns: var(--sidebar-w) minmax(0, 1fr) 0px;
+    }
+    .lyrics-panel {
+        position: fixed; top: 0; right: 0; height: 100vh; height: 100dvh;
+        width: 340px; max-width: 86vw;
+        transform: translateX(102%);
+        transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+        z-index: 600;
+    }
+    .salon.lyrics-open .lyrics-panel { transform: translateX(0); }
+}
 
 /* ═══ Customize: presets + segmented controls ═══ */
 .preset-row { display: flex; flex-wrap: wrap; gap: 8px; }

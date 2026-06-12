@@ -908,7 +908,6 @@ async function handleTrackEnded() {
    LYRICS  (LRCLIB — free, synced when available)
    ═══════════════════════════════════════════════════════════ */
 const lyricsToggle = $('lyricsToggle');
-const lyricsPanel  = $('lyricsPanel');
 const lyricsClose  = $('lyricsClose');
 const lyricsBody   = $('lyricsBody');
 const lyricsTrackEl = $('lyricsTrack');
@@ -1031,14 +1030,14 @@ function syncLyrics(time) {
 
 function openLyrics() {
     lyricsOpen = true;
-    lyricsPanel.classList.add('open');
+    document.querySelector('.salon').classList.add('lyrics-open');
     lyricsToggle.dataset.on = 'true';
     const t = curTrack();
     if (t) fetchLyrics(t); else lyricsBody.innerHTML = `<div class="lyrics-empty">Press play to load lyrics.</div>`;
 }
 function closeLyrics() {
     lyricsOpen = false;
-    lyricsPanel.classList.remove('open');
+    document.querySelector('.salon').classList.remove('lyrics-open');
     lyricsToggle.dataset.on = 'false';
 }
 lyricsToggle?.addEventListener('click', () => lyricsOpen ? closeLyrics() : openLyrics());
