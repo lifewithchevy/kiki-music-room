@@ -1011,7 +1011,10 @@ function syncLyrics(time) {
     if (idx === lastActiveLine) return;
     lastActiveLine = idx;
     const lines = lyricsBody.querySelectorAll('.lyric-line');
-    lines.forEach((el, i) => el.classList.toggle('active', i === idx));
+    lines.forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+        el.classList.toggle('near', Math.abs(i - idx) === 1);
+    });
     const activeEl = lines[idx];
     if (activeEl) activeEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
