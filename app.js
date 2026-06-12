@@ -1082,43 +1082,9 @@ function buildTurntableFace(t) {
    Layers: left/right sheen + broad tonal bands + fine near-black vertical veins.
    The focused spotlight is added on top by the .hero-stage.lit overlay. */
 function buildWoodPhoto() {
-    /* Photo-matched rosewood palette — vivid, saturated reds (not the muted
-       lighten()/darken() derivation). Resolution-independent SVG. */
-    const edge   = '#48100e';   // outer/darker red
-    const bright = '#c12f26';   // vivid red highlight streaks
-    const base   = '#911b18';   // mid red field
-    const bands  = '#5c0f0d';   // broad tonal grain
-    const veins  = '#170303';   // near-black fine grain
-    const W = 1400, H = 1000;
-    const svg =
-        `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' preserveAspectRatio='none'>` +
-        `<defs>` +
-            `<linearGradient id='b' x1='0' y1='0' x2='1' y2='0'>` +
-                `<stop offset='0' stop-color='${edge}'/>` +
-                `<stop offset='0.16' stop-color='${bright}'/>` +
-                `<stop offset='0.4' stop-color='${base}'/>` +
-                `<stop offset='0.6' stop-color='${bright}'/>` +
-                `<stop offset='0.84' stop-color='${base}'/>` +
-                `<stop offset='1' stop-color='${edge}'/>` +
-            `</linearGradient>` +
-            /* broad, slow tonal bands (cathedral grain) */
-            `<filter id='broad' x='0' y='0' width='100%' height='100%'>` +
-                `<feTurbulence type='fractalNoise' baseFrequency='0.006 0.0016' numOctaves='3' seed='5' result='n'/>` +
-                `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.9 0.9 0.9 0 -0.36'/>` +
-            `</filter>` +
-            /* fine vertical grain -> near-black veins */
-            `<filter id='fine' x='0' y='0' width='100%' height='100%'>` +
-                `<feTurbulence type='fractalNoise' baseFrequency='0.09 0.006' numOctaves='6' seed='12' result='n'/>` +
-                `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.78 0.78 0.78 0 -0.30'/>` +
-                `<feComponentTransfer><feFuncA type='gamma' amplitude='1' exponent='2.6' offset='0'/></feComponentTransfer>` +
-            `</filter>` +
-        `</defs>` +
-        `<rect width='${W}' height='${H}' fill='url(#b)'/>` +
-        `<rect width='${W}' height='${H}' filter='url(#broad)' fill='${bands}'/>` +
-        `<rect width='${W}' height='${H}' filter='url(#fine)' fill='${veins}'/>` +
-        `</svg>`;
-    const uri = 'data:image/svg+xml,' + encodeURIComponent(svg);
-    return `linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.0) 32%, rgba(0,0,0,0.12) 100%), url("${uri}") center / cover no-repeat`;
+    /* High-res rosewood photo. The focused spotlight is layered on top by
+       the .hero-stage.lit overlay. */
+    return `linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.0) 32%, rgba(0,0,0,0.12) 100%), url("wood-red.jpg") center / cover no-repeat`;
 }
 
 function applyTheme(wood, turntable, bgStyle, accent) {
