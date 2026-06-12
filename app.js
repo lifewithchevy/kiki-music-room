@@ -424,7 +424,7 @@ async function loadTrack(idx, autoPlay = false) {
     }, 850);
 
     renderTrackList();
-    if (lyricsOpen) fetchLyrics(track);
+    fetchLyrics(track);
 
     if (autoPlay) {
         await sleep(900);
@@ -489,7 +489,7 @@ async function beginPlayback() {
         rafId = requestAnimationFrame(tick);
         tbTrack.textContent  = track.name;
         tbArtist.textContent = ROOM.artist;
-        if (lyricsOpen) fetchLyrics(track);
+        fetchLyrics(track);
     } catch (err) {
         console.warn('Playback failed:', err);
     }
@@ -928,11 +928,16 @@ function splitArtistTitle(name) {
 /* "Clean" a noisy youtube title for better matching */
 function cleanTitle(s) {
     return String(s)
-        .replace(/\((?:official|lyric|audio|video|4k|hd|remaster|visualizer)[^)]*\)/gi, '')
+        .replace(/\((?:official|lyric|audio|video|4k|hd|remaster|visualizer|member\s*ver\.?|inst(?:rumental)?|acoustic|live|remix)[^)]*\)/gi, '')
         .replace(/\[[^\]]*\]/g, '')
-        .replace(/(?:official\s*(?:music\s*)?video|lyrics?|audio|visualizer|4k\s*remaster|remaster(?:ed)?)/gi, '')
+        .replace(/(?:official\s*(?:music\s*)?video|lyrics?|audio|visualizer|4k\s*remaster|remaster(?:ed)?|member\s*ver\.?|inst(?:rumental)?|acoustic|live|remix)/gi, '')
         .replace(/\s{2,}/g, ' ')
         .trim();
+}
+
+/* Strip every remaining parenthetical (e.g. "(feat. X)") as a last-resort search term */
+function bareTitle(s) {
+    return String(s).replace(/\([^)]*\)/g, '').replace(/\s{2,}/g, ' ').trim();
 }
 
 function parseLRC(lrc) {
@@ -968,8 +973,11 @@ async function fetchLyrics(track) {
 
     const { artist, title } = splitArtistTitle(track.name);
     const ct = cleanTitle(title);
+    const bt = bareTitle(ct);
     let hit = await lrclibSearch(`${artist} ${ct}`.trim());
     if (!hit) hit = await lrclibSearch(ct);
+    if (!hit && bt !== ct) hit = await lrclibSearch(`${artist} ${bt}`.trim());
+    if (!hit && bt !== ct) hit = await lrclibSearch(bt);
     if (!hit) hit = await lrclibSearch(cleanTitle(track.name));
 
     lyricsCache[track.id] = {
@@ -1003,10 +1011,12 @@ function renderLyrics(trackId) {
 }
 
 function syncLyrics(time) {
-    if (!lyricsOpen || !activeSynced || activeLyricsId !== (curTrack() && curTrack().id)) return;
+    const track = curTrack();
+    if (!lyricsOpen || !activeSynced || activeLyricsId !== (track && track.id)) return;
+    const adjusted = time + (track.lyricsOffset || 0);
     let idx = -1;
     for (let i = 0; i < activeSynced.length; i++) {
-        if (activeSynced[i].t <= time + 0.15) idx = i; else break;
+        if (activeSynced[i].t <= adjusted + 0.15) idx = i; else break;
     }
     if (idx === lastActiveLine) return;
     lastActiveLine = idx;
