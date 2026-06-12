@@ -1789,16 +1789,14 @@ body.immersive .cabinet-wrap {
 .tb-icon-btn:hover { color: var(--silver); background: rgba(255,255,255,0.04); }
 .tb-icon-btn[data-on="true"] { color: var(--accent-bright); }
 
-/* Lyrics CTA — matches the add-song button's subtle filled style */
+/* Lyrics CTA — icon-only square, same style as the add-song button */
 .tb-lyrics-btn {
-    display: flex; align-items: center; gap: 7px;
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 9px;
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.1);
-    color: var(--text-bright);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; font-weight: 500;
-    padding: 7px 13px 7px 11px; border-radius: 9px;
-    cursor: pointer; transition: all 0.18s; white-space: nowrap;
+    color: var(--text-bright); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
 }
 .tb-lyrics-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.22); }
 .tb-lyrics-btn[data-on="true"] {
@@ -1806,7 +1804,7 @@ body.immersive .cabinet-wrap {
     border-color: rgba(255,255,255,0.3);
     color: var(--accent-bright);
 }
-.tb-lyrics-btn svg { flex-shrink: 0; opacity: 0.9; }
+.tb-lyrics-btn svg { flex-shrink: 0; }
 
 .tb-volume {
     display: flex; align-items: center; gap: 10px;
