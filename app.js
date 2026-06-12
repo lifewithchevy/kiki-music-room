@@ -639,32 +639,16 @@ sidebarFiles?.addEventListener('change', () => {
 const immersiveBtn     = $('immersiveBtn');
 const exitImmersiveBtn = $('exitImmersiveBtn');
 
-/* Scale the cabinet to fully cover the viewport (no background visible) */
-function fitImmersive() {
-    const wrap  = document.querySelector('.cabinet-wrap');
-    const stage = document.querySelector('.hero-stage');
-    if (!wrap || !stage || !document.body.classList.contains('immersive')) return;
-    wrap.style.zoom = '';
-    wrap.style.transform = '';                      // measure natural size
-    const cw = wrap.offsetWidth, ch = wrap.offsetHeight;
-    if (!cw || !ch) return;
-    const scale = Math.max(stage.clientWidth / cw, stage.clientHeight / ch);
-    wrap.style.transformOrigin = 'center center';
-    wrap.style.transform = `scale(${scale})`;
-}
-
 function enterImmersive() {
     document.body.classList.add('immersive');
     document.body.classList.remove('cursor-idle'); // show cursor, 3s timer restarts via mousemove
-    requestAnimationFrame(fitImmersive);
+    requestAnimationFrame(fitCabinet);
     const el = document.documentElement;
     const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
     if (req) req.call(el).catch(() => {});
 }
 function exitImmersive() {
     document.body.classList.remove('immersive');
-    const wrap = document.querySelector('.cabinet-wrap');
-    if (wrap) { wrap.style.zoom = ''; wrap.style.transform = ''; }
     const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
     if (exit && document.fullscreenElement) exit.call(document).catch(() => {});
     setTimeout(fitCabinet, 60);                     // re-fit to the stage
@@ -1351,7 +1335,6 @@ function fitCabinet() {
     const wrap  = document.querySelector('.cabinet-wrap');
     const stage = document.querySelector('.hero-stage');
     if (!wrap || !stage) return;
-    if (document.body.classList.contains('immersive')) { fitImmersive(); return; }
     wrap.style.zoom = '1';                       // measure natural size
     const cw = wrap.offsetWidth, ch = wrap.offsetHeight;
     if (!cw || !ch) return;
