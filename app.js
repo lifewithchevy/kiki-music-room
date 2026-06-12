@@ -34,7 +34,7 @@ const DEFAULT_ROOM = {
         { name: "YEONJUN - Let Me Tell You (feat. Daniela of KATSEYE)", type: 'youtube', ytId: "2xbTnB6we0Q", color: "#6b4226" },
         { name: "KATSEYE - M.I.A - VALORANT Game Changers Version", type: 'youtube', ytId: "mX-dgjFS6eY", color: "#7a3f2a" },
         { name: "KATSEYE - Internet Girl", type: 'youtube', ytId: "5q9EjSUovc4", color: "#3a5a3a" },
-        { name: "LE SSERAFIM - SPAGHETTI (Member ver.)", type: 'youtube', ytId: "rQSDEVfYFnE", color: "#4a4a6a" },
+        { name: "LE SSERAFIM - SPAGHETTI (Member ver.)", type: 'youtube', ytId: "8Cp-8gZ4mnE", color: "#4a4a6a" },
         { name: "ILLIT - NOT CUTE ANYMORE", type: 'youtube', ytId: "x_RYZsOfpKY", color: "#8b3a3a" },
         { name: "LE SSERAFIM - ANTIFRAGILE", type: 'youtube', ytId: "pyf8cbqyfPs", color: "#a0552c" },
         { name: "LE SSERAFIM - CRAZY", type: 'youtube', ytId: "n6B5gQXlB-0", color: "#c4953a" },
