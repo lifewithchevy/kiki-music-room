@@ -461,6 +461,7 @@ async function beginPlayback() {
        (below) and seek back to 0 so the audible song begins as the needle lands. ── */
     if (audioCtx.state === 'suspended') audioCtx.resume();
     ensureAudioGraph();
+    ytWantAudible = false;            // stay silent through the tonearm choreography
     if (isYT(track)) {
         ytStop();
         ytLoadAndPlay(track.ytId, { muted: true });
@@ -491,6 +492,7 @@ async function beginPlayback() {
     await sleep(450);
 
     /* needle has landed — bring the song in from the top */
+    ytWantAudible = true;             // onStateChange will also unmute if the play was deferred
     try {
         if (isYT(track)) {
             if (ytReady) { try { ytPlayer.seekTo(0, true); ytPlayer.unMute(); ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {} }
@@ -519,6 +521,7 @@ async function stopPlayback() {
     busy = true;
 
     isPlaying = false;
+    ytWantAudible = false;
     audioEl.pause();
     ytPause();
     stopCrackle();
@@ -729,7 +732,7 @@ document.addEventListener('keydown', e => {
 /* ═══════════════════════════════════════════════════════════
    YOUTUBE AUDIO SOURCE  (plays youtube-type tracks)
    ═══════════════════════════════════════════════════════════ */
-let ytPlayer = null, ytReady = false, ytPending = null;
+let ytPlayer = null, ytReady = false, ytPending = null, ytWantAudible = false;
 
 window.onYouTubeIframeAPIReady = function () {
     ytPlayer = new YT.Player('ytHost', {
@@ -741,7 +744,16 @@ window.onYouTubeIframeAPIReady = function () {
                 try { ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {}
                 if (ytPending) { const p = ytPending; ytPending = null; ytLoadAndPlay(p.id, { muted: p.muted }); }
             },
-            onStateChange: e => { if (e.data === YT.PlayerState.ENDED) handleTrackEnded(); }
+            onStateChange: e => {
+                /* iPad safety net: whenever the player actually reaches PLAYING
+                   and we want sound, make sure it's audible. Covers the
+                   tap-before-API-ready race, auto-advance between tracks, and
+                   recovery after a buffer stall — all without a fresh gesture. */
+                if (e.data === YT.PlayerState.PLAYING && ytWantAudible) {
+                    try { ytPlayer.unMute(); ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {}
+                }
+                if (e.data === YT.PlayerState.ENDED) handleTrackEnded();
+            }
         }
     });
 };
@@ -898,10 +910,12 @@ function playTrackImmediate(idx) {
     setSourceVisual(t);
     if (isYT(t)) {
         audioEl.pause();
-        ytLoadAndPlay(t.ytId);
+        ytWantAudible = true;            // sound expected at once here (no choreography);
+        ytLoadAndPlay(t.ytId, { muted: true }); // start muted, onStateChange unmutes (iOS-safe on auto-advance)
     } else {
         ytStop();
         audioEl.src = t.url;
+        audioEl.muted = false;
         audioEl.play().catch(() => {});
     }
     renderTrackList();
