@@ -453,10 +453,27 @@ async function beginPlayback() {
     if (currentTrackIdx < 0 || !playlist[currentTrackIdx]) return;
     busy = true;
 
-    if (!isPowered) togglePower(true);
-    if (audioCtx.state === 'suspended') await audioCtx.resume();
-    ensureAudioGraph();
+    const track = playlist[currentTrackIdx];
 
+    /* ── iOS unlock: media MUST start inside the tap, before any `await`, or
+       Safari/Chrome on iPad silently blocks it. Start it muted now so the song
+       stays silent through the tonearm choreography, then unmute on needle-drop
+       (below) and seek back to 0 so the audible song begins as the needle lands. ── */
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    ensureAudioGraph();
+    if (isYT(track)) {
+        ytStop();
+        ytLoadAndPlay(track.ytId, { muted: true });
+    } else {
+        ytStop();
+        audioEl.src = track.url;
+        audioEl.muted = true;
+        audioEl.play().catch(() => {});
+    }
+    isPlaying = true;
+    updatePlayUI();
+
+    if (!isPowered) togglePower(true);
     motorStatus.classList.add('running');
     playMotorStart();
 
@@ -473,20 +490,15 @@ async function beginPlayback() {
     playStylusDrop();
     await sleep(450);
 
-    const track = playlist[currentTrackIdx];
+    /* needle has landed — bring the song in from the top */
     try {
         if (isYT(track)) {
-            ytStop();
-            ytLoadAndPlay(track.ytId);
-            isPlaying = true;
+            if (ytReady) { try { ytPlayer.seekTo(0, true); ytPlayer.unMute(); ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {} }
         } else {
-            ytStop();
-            audioEl.src = track.url;
-            await audioEl.play();
-            isPlaying = true;
+            try { audioEl.currentTime = 0; } catch (_) {}
+            audioEl.muted = false;
         }
         startCrackle();
-        updatePlayUI();
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(tick);
         tbTrack.textContent  = track.name;
@@ -727,16 +739,17 @@ window.onYouTubeIframeAPIReady = function () {
             onReady: () => {
                 ytReady = true;
                 try { ytPlayer.setVolume(Number(volumeSlider.value)); } catch (_) {}
-                if (ytPending) { const id = ytPending; ytPending = null; ytLoadAndPlay(id); }
+                if (ytPending) { const p = ytPending; ytPending = null; ytLoadAndPlay(p.id, { muted: p.muted }); }
             },
             onStateChange: e => { if (e.data === YT.PlayerState.ENDED) handleTrackEnded(); }
         }
     });
 };
 
-function ytLoadAndPlay(id) {
-    if (!ytReady) { ytPending = id; return; }
+function ytLoadAndPlay(id, { muted = false } = {}) {
+    if (!ytReady) { ytPending = { id, muted }; return; }
     try {
+        if (muted) ytPlayer.mute(); else ytPlayer.unMute();
         ytPlayer.loadVideoById(id);
         ytPlayer.setVolume(Number(volumeSlider.value));
         ytPlayer.playVideo();
