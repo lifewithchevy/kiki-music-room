@@ -1,49 +1,73 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <defs>
-    <radialGradient id="cab" cx="34%" cy="28%" r="90%">
-      <stop offset="0%" stop-color="#9c3232"/>
-      <stop offset="55%" stop-color="#7a1616"/>
-      <stop offset="100%" stop-color="#490d0d"/>
+    <radialGradient id="cab" cx="32%" cy="26%" r="92%">
+      <stop offset="0%" stop-color="#a83636"/>
+      <stop offset="52%" stop-color="#7c1717"/>
+      <stop offset="100%" stop-color="#460c0c"/>
     </radialGradient>
-    <radialGradient id="vinyl" cx="42%" cy="40%" r="62%">
-      <stop offset="0%" stop-color="#2c2c2c"/>
-      <stop offset="68%" stop-color="#0d0d0d"/>
+    <radialGradient id="vig" cx="50%" cy="50%" r="72%">
+      <stop offset="62%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="78%" stop-color="#000000" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vinyl" cx="42%" cy="38%" r="64%">
+      <stop offset="0%" stop-color="#333333"/>
+      <stop offset="55%" stop-color="#141414"/>
       <stop offset="100%" stop-color="#000000"/>
     </radialGradient>
-    <radialGradient id="label" cx="40%" cy="34%" r="75%">
-      <stop offset="0%" stop-color="#6f8f5d"/>
-      <stop offset="100%" stop-color="#3a5a3a"/>
+    <radialGradient id="label" cx="38%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#7c9a68"/>
+      <stop offset="100%" stop-color="#39592f"/>
     </radialGradient>
-    <linearGradient id="arm" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f5e6ad"/>
-      <stop offset="100%" stop-color="#d4b258"/>
-    </linearGradient>
-    <radialGradient id="sheen" cx="38%" cy="32%" r="40%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+    <linearGradient id="sheen2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="38%" stop-color="#ffffff" stop-opacity="0.04"/>
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="arm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7e9b2"/>
+      <stop offset="55%" stop-color="#e3c873"/>
+      <stop offset="100%" stop-color="#caa84e"/>
+    </linearGradient>
+    <radialGradient id="pivot" cx="38%" cy="34%" r="70%">
+      <stop offset="0%" stop-color="#4a3a28"/>
+      <stop offset="100%" stop-color="#201810"/>
     </radialGradient>
   </defs>
 
-  <!-- full-bleed cabinet (iOS masks the corners) -->
+  <!-- cabinet -->
   <rect width="1024" height="1024" fill="url(#cab)"/>
+  <rect width="1024" height="1024" fill="url(#vig)"/>
 
-  <!-- vinyl record -->
-  <circle cx="455" cy="520" r="362" fill="url(#vinyl)"/>
-  <g stroke="#272727" stroke-width="2" fill="none" opacity="0.7">
-    <circle cx="455" cy="520" r="322"/>
-    <circle cx="455" cy="520" r="284"/>
-    <circle cx="455" cy="520" r="246"/>
-    <circle cx="455" cy="520" r="208"/>
+  <!-- soft drop shadow under the record -->
+  <circle cx="468" cy="548" r="396" fill="url(#shadow)"/>
+
+  <!-- vinyl -->
+  <circle cx="462" cy="524" r="372" fill="url(#vinyl)"/>
+  <circle cx="462" cy="524" r="372" fill="none" stroke="#000000" stroke-width="3" opacity="0.6"/>
+  <g stroke="#2b2b2b" stroke-width="2.5" fill="none" opacity="0.55">
+    <circle cx="462" cy="524" r="338"/>
+    <circle cx="462" cy="524" r="306"/>
+    <circle cx="462" cy="524" r="274"/>
+    <circle cx="462" cy="524" r="242"/>
+    <circle cx="462" cy="524" r="210"/>
   </g>
-  <circle cx="455" cy="520" r="362" fill="url(#sheen)"/>
+  <!-- glossy sheen -->
+  <circle cx="462" cy="524" r="372" fill="url(#sheen2)"/>
 
   <!-- label -->
-  <circle cx="455" cy="520" r="158" fill="url(#label)"/>
-  <circle cx="455" cy="520" r="15" fill="#ece9da"/>
+  <circle cx="462" cy="524" r="162" fill="url(#label)"/>
+  <circle cx="462" cy="524" r="162" fill="none" stroke="#caa84e" stroke-width="4" opacity="0.65"/>
+  <text x="462" y="476" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-weight="600" font-size="78" letter-spacing="6" fill="#f3efe2">AVA</text>
+  <circle cx="462" cy="524" r="15" fill="#efece0"/>
+  <text x="462" y="606" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-style="italic" font-size="34" letter-spacing="2" fill="#e7e6d4" opacity="0.85">vinyls</text>
 
   <!-- tonearm -->
-  <circle cx="800" cy="250" r="46" fill="#241b13"/>
-  <circle cx="800" cy="250" r="21" fill="#3a2c1e"/>
-  <path d="M 800 250 C 724 408, 690 516, 626 628" fill="none" stroke="url(#arm)" stroke-width="24" stroke-linecap="round"/>
-  <path d="M 626 628 l -36 30 -24 28" fill="none" stroke="#161616" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="812" cy="232" r="50" fill="url(#pivot)"/>
+  <circle cx="812" cy="232" r="22" fill="#3a2c1e"/>
+  <path d="M 812 232 C 730 396, 692 512, 624 632" fill="none" stroke="url(#arm)" stroke-width="26" stroke-linecap="round"/>
+  <path d="M 624 632 l -40 30 -26 30" fill="none" stroke="#14110d" stroke-width="20" stroke-linecap="round"/>
 </svg>
