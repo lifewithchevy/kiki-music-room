@@ -509,27 +509,20 @@ document.getElementById('btBtn')?.addEventListener('click', () => {
     document.getElementById('btBtn').classList.toggle('active');
 });
 
-/* ═══ Auto-advance when track ends ═══ */
+/* ═══ Auto-advance when track ends (loops back to the start after the last track) ═══ */
 audioEl.addEventListener('ended', async () => {
-    if (currentTrackIdx < playlist.length - 1) {
-        currentTrackIdx++;
-        const t = playlist[currentTrackIdx];
-        labelDisc.style.background = t.color;
-        labelDisc.style.setProperty('--label-color', t.color);
-        labelArtist.textContent = t.name;
-        updateTbArt(t);
-        audioEl.src = t.url;
-        audioEl.play().catch(() => {});
-        tbTrack.textContent  = t.name;
-        tbArtist.textContent = 'Kiki';
-        renderTrackList();
-    } else {
-        await stopPlayback();
-        progressFill.style.width = '0%';
-        progressHead.style.left  = '0%';
-        currentTimeEl.textContent = '0:00';
-        totalTimeEl.textContent   = '0:00';
-    }
+    if (playlist.length === 0) return;
+    currentTrackIdx = currentTrackIdx < playlist.length - 1 ? currentTrackIdx + 1 : 0;
+    const t = playlist[currentTrackIdx];
+    labelDisc.style.background = t.color;
+    labelDisc.style.setProperty('--label-color', t.color);
+    labelArtist.textContent = t.name;
+    updateTbArt(t);
+    audioEl.src = t.url;
+    audioEl.play().catch(() => {});
+    tbTrack.textContent  = t.name;
+    tbArtist.textContent = 'Kiki';
+    renderTrackList();
 });
 
 /* ═══ Upload ═══ */
